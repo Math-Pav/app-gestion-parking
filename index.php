@@ -4,6 +4,8 @@ ini_set('display_errors', 1);
 session_start();
 
 require_once __DIR__ . '/backend/controllers/UserController.php';
+require_once __DIR__ . '/backend/controllers/RegisterController.php';
+
 
 define('BASE_PATH', '/projet_parking');
 
@@ -29,6 +31,11 @@ $routes = [
         'view' => 'frontend/views/dashboard.html',
         'auth' => true,
         'js' => ['frontend/controllers/DashboardController.js']
+    ],
+    '/register' => [
+        'view' => 'frontend/views/register.html',
+        'auth' => false,
+        'js' => ['frontend/controllers/RegisterController.js']
     ],
     '/reservations' => [
         'view' => 'frontend/views/reservations.html',
@@ -59,6 +66,9 @@ if (strpos($path, '/api/') === 0) {
         session_destroy();
         echo json_encode(['success' => true]);
         exit;
+    } elseif ($path === '/api/register') {
+        $controller = new RegisterController();
+        $controller->handleRegister();
     } else {
         header("HTTP/1.0 404 Not Found");
         echo json_encode(['error' => 'API endpoint non trouvé']);
@@ -84,7 +94,7 @@ if (isset($routes[$path])) {
     </head>
     <body>
     <?php
-    if ($path !== '/') {
+    if ($path !== '/' && $path !== '/register') {
         $page = trim($path, '/');
         include __DIR__ . '/backend/templates/navbar.php';
     }
