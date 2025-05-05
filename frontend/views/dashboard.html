@@ -1,32 +1,29 @@
-<div class="dashboard-container">
-  <header class="dashboard-header">
-    <h1>Tableau de bord</h1>
-    <nav class="dashboard-nav">
-      <ul>
-        <li><a href="#accueil" class="active">Accueil</a></li>
-        <li><a href="#reservations">Réservations</a></li>
-        <li><a href="#profil">Profil</a></li>
-        <li><a href="#" id="logoutBtn">Déconnexion</a></li>
-      </ul>
-    </nav>
-  </header>
+<!-- frontend/views/dashboard.html -->
+<div class="container mt-4">
+  <div id="message" class="alert" style="display: none;"></div>
 
-  <main class="dashboard-content">
-    <div id="message" class="message"></div>
-
-    <section class="dashboard-stats">
-      <div class="stat-card">
-        <h3>Places disponibles</h3>
-        <p id="availableSpots">--</p>
+  <div class="row mb-4">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-body text-center">
+          <h5 class="card-title">Places disponibles</h5>
+          <p class="card-text display-4" id="availableSpots">--</p>
+        </div>
       </div>
-      <div class="stat-card">
-        <h3>Mes réservations</h3>
-        <p id="myReservations">--</p>
+    </div>
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-body text-center">
+          <h5 class="card-title">Mes réservations</h5>
+          <p class="card-text display-4" id="myReservations">--</p>
+        </div>
       </div>
-    </section>
+    </div>
+  </div>
 
-    <section class="quick-actions">
-      <button class="action-btn" id="newReservationBtn">Nouvelle réservation</button>
-    </section>
-  </main>
+  <div class="text-center">
+    <button class="btn btn-primary btn-lg" id="newReservationBtn">
+      Nouvelle réservation
+    </button>
+  </div>
 </div>

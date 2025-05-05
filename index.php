@@ -5,10 +5,8 @@ session_start();
 
 require_once __DIR__ . '/backend/controllers/UserController.php';
 
-// Définir le chemin de base
 define('BASE_PATH', '/projet_parking');
 
-// Gestion des fichiers statiques
 $staticExtensions = ['css', 'js'];
 $extension = pathinfo($_SERVER['REQUEST_URI'], PATHINFO_EXTENSION);
 if (in_array($extension, $staticExtensions)) {
@@ -31,10 +29,19 @@ $routes = [
         'view' => 'frontend/views/dashboard.html',
         'auth' => true,
         'js' => ['frontend/controllers/DashboardController.js']
+    ],
+    '/reservations' => [
+        'view' => 'frontend/views/reservations.html',
+        'auth' => true,
+        'js' => ['frontend/controllers/ReservationController.js']
+    ],
+    '/profile' => [
+        'view' => 'frontend/views/profile.html',
+        'auth' => true,
+        'js' => ['frontend/controllers/ProfileController.js']
     ]
 ];
 
-// Traitement de l'URL
 $request_uri = $_SERVER['REQUEST_URI'];
 $request_uri = str_replace(BASE_PATH, '', $request_uri);
 $path = parse_url($request_uri, PHP_URL_PATH);
@@ -44,11 +51,14 @@ if ($path === '') {
     $path = '/';
 }
 
-// Gestion des routes API
 if (strpos($path, '/api/') === 0) {
     if ($path === '/api/login') {
         $controller = new UserController();
         $controller->handleLogin();
+    } elseif ($path === '/api/logout') {
+        session_destroy();
+        echo json_encode(['success' => true]);
+        exit;
     } else {
         header("HTTP/1.0 404 Not Found");
         echo json_encode(['error' => 'API endpoint non trouvé']);
@@ -56,7 +66,6 @@ if (strpos($path, '/api/') === 0) {
     exit;
 }
 
-// Gestion des routes normales
 if (isset($routes[$path])) {
     if ($routes[$path]['auth'] && !isset($_SESSION['user'])) {
         header('Location: ' . BASE_PATH);
@@ -70,14 +79,26 @@ if (isset($routes[$path])) {
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Mon Application</title>
-        <link rel="stylesheet" href="<?php echo BASE_PATH; ?>/frontend/assets/css/style.css">
+        <title>Parking App</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     </head>
     <body>
-    <?php include __DIR__ . '/' . $routes[$path]['view']; ?>
+    <?php
+    if ($path !== '/') {
+        $page = trim($path, '/');
+        include __DIR__ . '/backend/templates/navbar.php';
+    }
+
+    include __DIR__ . '/' . $routes[$path]['view'];
+    ?>
+
     <?php foreach ($routes[$path]['js'] as $script): ?>
         <script src="<?php echo BASE_PATH; ?>/<?php echo $script; ?>"></script>
     <?php endforeach; ?>
+
+    <?php if ($path !== '/'): ?>
+        <script src="<?php echo BASE_PATH; ?>/frontend/assets/js/navbar.js" defer></script>
+    <?php endif; ?>
     </body>
     </html>
     <?php

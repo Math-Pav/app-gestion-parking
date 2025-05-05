@@ -13,7 +13,6 @@ class DashboardController {
         };
 
         this.bindEvents();
-        this.loadDashboardData();
     }
 
     bindEvents() {
@@ -23,16 +22,10 @@ class DashboardController {
         });
 
         this.elements.newReservationBtn.addEventListener('click', () => {
-            // À implémenter: logique pour nouvelle réservation
             this.displayMessage('Fonctionnalité à venir', 'info');
         });
     }
 
-    async loadDashboardData() {
-        // À implémenter: chargement des données du tableau de bord
-        this.elements.availableSpots.textContent = "20";  // Exemple
-        this.elements.myReservations.textContent = "0";   // Exemple
-    }
 
     async logout() {
         try {
@@ -54,8 +47,14 @@ class DashboardController {
     }
 
     displayMessage(text, type) {
-        this.elements.message.textContent = text;
-        this.elements.message.className = `message ${type}`;
+        const messageElement = this.elements.message;
+        messageElement.textContent = text;
+        messageElement.style.display = 'block';
+        messageElement.className = `alert alert-${type}`;
+
+        setTimeout(() => {
+            messageElement.style.display = 'none';
+        }, 3000);
     }
 }
 
