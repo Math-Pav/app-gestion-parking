@@ -3,8 +3,9 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 session_start();
 
-require_once __DIR__ . '/backend/controllers/UserController.php';
+require_once __DIR__ . '/backend/controllers/LoginController.php';
 require_once __DIR__ . '/backend/controllers/RegisterController.php';
+require_once __DIR__ . '/backend/controllers/UserController.php';
 
 
 define('BASE_PATH', '/projet_parking');
@@ -46,7 +47,8 @@ $routes = [
         'view' => 'frontend/views/profile.html',
         'auth' => true,
         'js' => ['frontend/controllers/ProfileController.js']
-    ]
+    ],
+
 ];
 
 $request_uri = $_SERVER['REQUEST_URI'];
@@ -60,7 +62,7 @@ if ($path === '') {
 
 if (strpos($path, '/api/') === 0) {
     if ($path === '/api/login') {
-        $controller = new UserController();
+        $controller = new LoginController();
         $controller->handleLogin();
     } elseif ($path === '/api/logout') {
         session_destroy();
@@ -69,6 +71,9 @@ if (strpos($path, '/api/') === 0) {
     } elseif ($path === '/api/register') {
         $controller = new RegisterController();
         $controller->handleRegister();
+    }  elseif ($path === '/api/profile') {
+        $controller = new UserController();
+        $controller->getProfile();
     } else {
         header("HTTP/1.0 404 Not Found");
         echo json_encode(['error' => 'API endpoint non trouvé']);

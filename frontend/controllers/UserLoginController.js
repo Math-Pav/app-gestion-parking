@@ -59,7 +59,7 @@ class UserLoginController {
     handleLoginResponse(data) {
         if (data.success) {
             this.displayMessage('Connexion réussie', 'success');
-            window.location.href = '/projet_parking/dashboard';  // Ajout du BASE_PATH
+            window.location.href = '/projet_parking/dashboard';
         } else {
             this.displayMessage(data.message, 'error');
         }

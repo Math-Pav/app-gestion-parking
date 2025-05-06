@@ -1,52 +1,46 @@
 <?php
-
 require_once dirname(__DIR__) . '/includes/Database.php';
 
 class UserModel {
-    private $db;
     private $conn;
 
     public function __construct() {
         try {
-            $this->db = new Database();
-            $this->conn = $this->db->connect();
-
-            if ($this->conn === null) {
-                throw new Exception("Impossible de se connecter à la base de données");
-            }
+            $database = new Database();
+            $this->conn = $database->connect();
         } catch (Exception $e) {
             error_log($e->getMessage());
             throw $e;
         }
     }
 
-    public function login($email, $password) {
+    public function getUserProfile($userId) {
         try {
-            $query = "SELECT id, email, password FROM user WHERE email = :email LIMIT 1";
+            $query = "SELECT name, email, phone, role, registration_date, status FROM user WHERE id = :id";
             $stmt = $this->conn->prepare($query);
-            $stmt->execute(['email' => $email]);
+            $stmt->bindParam(':id', $userId, PDO::PARAM_INT);
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            if ($stmt->rowCount() > 0) {
-                $user = $stmt->fetch(PDO::FETCH_ASSOC);
-                if (password_verify($password, $user['password'])) {
-                    unset($user['password']);
-                    return [
-                        'success' => true,
-                        'user' => $user
-                    ];
-                }
+            if ($result) {
+                return [
+                    'success' => true,
+                    'user' => [
+                        'name' => $result['name'],
+                        'email' => $result['email'],
+                        'phone' => $result['phone'] ?? 'Non renseigné',
+                        'role' => $result['role'],
+                        'registration_date' => $result['registration_date'],
+                        'status' => $result['status']
+                    ]
+                ];
             }
 
-            return [
-                'success' => false,
-                'message' => 'Email ou mot de passe incorrect'
-            ];
+            return ['success' => false, 'message' => 'Utilisateur non trouvé'];
 
         } catch (PDOException $e) {
-            return [
-                'success' => false,
-                'message' => 'Erreur lors de la connexion: ' . $e->getMessage()
-            ];
+            error_log($e->getMessage());
+            return ['success' => false, 'message' => 'Erreur lors de la récupération du profil'];
         }
     }
 }

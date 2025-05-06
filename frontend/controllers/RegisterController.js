@@ -2,10 +2,20 @@ document.addEventListener('DOMContentLoaded', function() {
     const registerBtn = document.getElementById('registerBtn');
     const messageDiv = document.getElementById('message');
     const phoneInput = document.getElementById('phone');
+    const emailInput = document.getElementById('email');
 
     phoneInput.addEventListener('input', function() {
         if (this.value.length > 10) {
             this.value = this.value.slice(0, 10);
+        }
+    });
+
+    emailInput.addEventListener('input', function() {
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        if (!emailRegex.test(this.value)) {
+            emailInput.setCustomValidity('Format invalide. Exemple: exemple@exemple.com');
+        } else {
+            emailInput.setCustomValidity('');
         }
     });
 
@@ -18,6 +28,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (!name || !email || !phone || !password || !confirmPassword) {
             showMessage('Tous les champs sont requis', 'danger');
+            return;
+        }
+
+        // Validation de l'email
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        if (!emailRegex.test(email)) {
+            showMessage('Format d\'email invalide. Exemple: exemple@exemple.com', 'danger');
             return;
         }
 

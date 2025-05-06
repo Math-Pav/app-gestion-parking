@@ -1,57 +1,29 @@
 <?php
-
-require_once __DIR__ . '/../models/UserModel.php';
+require_once dirname(__DIR__) . '/models/UserModel.php';
 
 class UserController {
     private $userModel;
 
     public function __construct() {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
         $this->userModel = new UserModel();
     }
 
-    public function handleLogin() {
+    public function getProfile() {
         header('Content-Type: application/json');
 
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            echo json_encode([
-                'success' => false,
-                'message' => 'Méthode non autorisée'
-            ]);
+        if (!isset($_SESSION['user'])) {
+            http_response_code(401);
+            echo json_encode(['success' => false, 'message' => 'Non authentifié']);
             return;
         }
 
-        $data = json_decode(file_get_contents('php://input'), true);
+        $userId = $_SESSION['user']['id'];
+        $result = $this->userModel->getUserProfile($userId);
 
-        if (!isset($data['email']) || !isset($data['password'])) {
-            echo json_encode([
-                'success' => false,
-                'message' => 'Email et mot de passe requis'
-            ]);
-            return;
-        }
-
-        if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
-            echo json_encode([
-                'success' => false,
-                'message' => 'Email invalide'
-            ]);
-            return;
-        }
-
-        if (strlen($data['password']) < 6) {
-            echo json_encode([
-                'success' => false,
-                'message' => 'Le mot de passe doit contenir au moins 6 caractères'
-            ]);
-            return;
-        }
-
-        $result = $this->userModel->login($data['email'], $data['password']);
-
-        if ($result['success']) {
-            $_SESSION['user'] = $result['user'];
-        }
-
+        http_response_code($result['success'] ? 200 : 404);
         echo json_encode($result);
     }
 }
