@@ -43,6 +43,16 @@ $routes = [
         'auth' => true,
         'js' => ['frontend/controllers/ReservationController.js']
     ],
+    '/next-paiement' => [
+        'view' => 'frontend/views/next-paiement.html',
+        'auth' => true,
+        'js' => ['frontend/controllers/NextPaiementController.js']
+    ],
+    '/paiement' => [
+        'view' => 'frontend/views/paiement.html',
+        'auth' => true,
+        'js' => ['frontend/controllers/PaiementController.js']
+    ],
     '/notifications' => [
         'view' => 'frontend/views/notifications.html',
         'auth' => true,

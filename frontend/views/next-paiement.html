@@ -1,0 +1,128 @@
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-6">
+            <!-- En-tête -->
+            <div class="text-center mb-4">
+                <h3>Paiement sécurisé</h3>
+                <p class="text-muted">Montant à payer : <strong id="amountToPay">00.00 €</strong></p>
+            </div>
+
+            <!-- Formulaire de paiement -->
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <form id="paymentForm">
+                        <!-- Type de carte -->
+                        <div class="mb-4">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="cardType" value="visa" checked>
+                                    <label class="form-check-label"><i class="bi bi-credit-card"></i> Visa</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="cardType" value="mastercard">
+                                    <label class="form-check-label"><i class="bi bi-credit-card"></i> Mastercard</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Numéro de carte -->
+                        <div class="mb-3">
+                            <label class="form-label">Numéro de carte</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19">
+                                <span class="input-group-text"><i class="bi bi-credit-card"></i></span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <!-- Date d'expiration -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Date d'expiration</label>
+                                <input type="text" class="form-control" id="expiryDate" placeholder="MM/AA" maxlength="5">
+                            </div>
+
+                            <!-- CVC -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Code de sécurité (CVC)</label>
+                                <div class="input-group">
+                                    <input type="password" class="form-control" id="cvc" placeholder="123" maxlength="3">
+                                    <span class="input-group-text"><i class="bi bi-patch-question"></i></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Nom sur la carte -->
+                        <div class="mb-4">
+                            <label class="form-label">Nom sur la carte</label>
+                            <input type="text" class="form-control" id="cardName" placeholder="JEAN DUPONT">
+                        </div>
+
+                        <!-- Checkbox conditions -->
+                        <div class="mb-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="acceptTerms">
+                                <label class="form-check-label" for="acceptTerms">
+                                    J'accepte les conditions générales de vente
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Boutons -->
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg" id="validatePayment">
+                                Valider le paiement
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary" id="cancelPayment">
+                                Annuler
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Message de sécurité -->
+            <div class="text-center mt-4">
+                <p class="text-muted small">
+                    <i class="bi bi-shield-lock"></i>
+                    Paiement sécurisé SSL - Vos données sont cryptées
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        border: none;
+        border-radius: 15px;
+    }
+
+    .form-control {
+        padding: 0.75rem;
+        border-radius: 8px;
+    }
+
+    .form-control:focus {
+        box-shadow: 0 0 0 0.2rem rgba(72, 52, 212, 0.25);
+        border-color: #4834d4;
+    }
+
+    .btn-lg {
+        padding: 12px 24px;
+    }
+
+    .input-group-text {
+        background-color: #f8f9fa;
+    }
+
+    #validatePayment:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+    }
+
+    @media (max-width: 768px) {
+        .container {
+            padding: 10px;
+        }
+    }
+</style>

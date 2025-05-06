@@ -18,6 +18,11 @@ $userName = isset($_SESSION['user']['name']) ? htmlspecialchars($_SESSION['user'
                 <li class="nav-item">
                     <a class="nav-link" href="/projet_parking/notifications">Notifications</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/projet_parking/paiement">
+                        <i class="bi bi-credit-card"></i>
+                    </a>
+                </li>
             </ul>
             <ul class="navbar-nav">
                 <li class="nav-item dropdown">

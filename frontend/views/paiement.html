@@ -1,0 +1,91 @@
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-8">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Récapitulatif de votre réservation</h4>
+                </div>
+                <div class="card-body">
+                    <!-- Détails de la réservation -->
+                    <div class="mb-4">
+                        <h5 class="border-bottom pb-2">Détails de la place</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>Place n° :</strong> <span id="placeNumber"></span></p>
+                                <p><strong>Type :</strong> <span id="placeType"></span></p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>Date d'arrivée :</strong> <span id="startDate"></span></p>
+                                <p><strong>Date de départ :</strong> <span id="endDate"></span></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Calcul du prix -->
+                    <div class="bg-light p-3 rounded mb-4">
+                        <h5 class="border-bottom pb-2">Détails du prix</h5>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Tarif horaire :</span>
+                            <span id="hourlyRate"></span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Durée :</span>
+                            <span id="duration"></span>
+                        </div>
+                        <div class="d-flex justify-content-between fw-bold">
+                            <span>Total :</span>
+                            <span id="totalPrice"></span>
+                        </div>
+                    </div>
+
+                    <!-- Boutons d'action -->
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-primary btn-lg" id="proceedToPayment" onclick="window.location.href='/projet_parking/next-paiement'">
+                            <i class="bi bi-credit-card me-2"></i>Procéder au paiement
+                        </button>
+                        <button class="btn btn-outline-secondary" id="cancelReservation">
+                            <i class="bi bi-x-circle me-2"></i>Annuler la réservation
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Informations complémentaires -->
+            <div class="alert alert-info" role="alert">
+                <i class="bi bi-info-circle me-2"></i>
+                Le paiement sera traité de manière sécurisée. Aucune information bancaire n'est stockée.
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        border: none;
+        border-radius: 15px;
+    }
+
+    .card-header {
+        border-radius: 15px 15px 0 0 !important;
+    }
+
+    .btn-lg {
+        padding: 12px 24px;
+    }
+
+    #proceedToPayment:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+    }
+
+    .alert {
+        border-radius: 10px;
+    }
+
+    @media (max-width: 768px) {
+        .container {
+            padding: 10px;
+        }
+    }
+</style>
