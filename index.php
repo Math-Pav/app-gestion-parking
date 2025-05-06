@@ -38,8 +38,8 @@ $routes = [
         'auth' => false,
         'js' => ['frontend/controllers/RegisterController.js']
     ],
-    '/reservations' => [
-        'view' => 'frontend/views/reservations.html',
+    '/reservation' => [
+        'view' => 'frontend/views/reservation.html',
         'auth' => true,
         'js' => ['frontend/controllers/ReservationController.js']
     ],
