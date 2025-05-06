@@ -40,13 +40,20 @@ class ProfileController {
 
         this.elements.name.textContent = user.name;
         this.elements.email.textContent = user.email;
+
         this.elements.phone.textContent = user.phone || 'Non renseigné';
-        this.elements.role.textContent = user.role === 'ROLE_ADMIN' ? 'Administrateur' : 'Utilisateur';
+
+        if (user.role === "admin") {
+            this.elements.role.textContent = "Administrateur";
+        } else {
+            this.elements.role.textContent = "Utilisateur";
+        }
 
         const date = new Date(user.registration_date);
         this.elements.registration_date.textContent = date.toLocaleDateString('fr-FR');
 
-        if (user.status === "1") {
+        const isActive = user.status === true || user.status === 1 || user.status === "1";
+        if (isActive) {
             this.elements.status.textContent = 'Actif';
             this.elements.status.className = 'badge rounded-pill fs-6 p-2 w-100 bg-success';
         } else {
