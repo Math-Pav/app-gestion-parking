@@ -43,6 +43,11 @@ $routes = [
         'auth' => true,
         'js' => ['frontend/controllers/ReservationController.js']
     ],
+    '/notifications' => [
+        'view' => 'frontend/views/notifications.html',
+        'auth' => true,
+        'js' => ['frontend/controllers/NotificationsController.js']
+    ],
     '/profile' => [
         'view' => 'frontend/views/profile.html',
         'auth' => true,

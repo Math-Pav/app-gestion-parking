@@ -13,7 +13,10 @@ $userName = isset($_SESSION['user']['name']) ? htmlspecialchars($_SESSION['user'
                     <a class="nav-link" href="/projet_parking/dashboard">Tableau de bord</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/projet_parking/reservations">Réservations</a>
+                    <a class="nav-link" href="/projet_parking/reservation">Réservations</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/projet_parking/notifications">Notifications</a>
                 </li>
             </ul>
             <ul class="navbar-nav">
