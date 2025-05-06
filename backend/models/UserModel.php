@@ -43,4 +43,53 @@ class UserModel {
             return ['success' => false, 'message' => 'Erreur lors de la récupération du profil'];
         }
     }
+
+    public function updateUserProfile($userId, $data) {
+        try {
+            $query = "UPDATE user 
+                 SET name = :name, 
+                     email = :email, 
+                     phone = :phone 
+                 WHERE id = :id";
+
+            $stmt = $this->conn->prepare($query);
+
+            $result = $stmt->execute([
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'phone' => $data['phone'] ?: null,
+                'id' => $userId
+            ]);
+
+            if ($result) {
+                $updatedUser = $this->getUserProfile($userId);
+
+                return [
+                    'success' => true,
+                    'message' => 'Profil mis à jour avec succès',
+                    'user' => $updatedUser['user']
+                ];
+            }
+
+            return [
+                'success' => false,
+                'message' => 'Erreur lors de la mise à jour du profil'
+            ];
+
+        } catch (PDOException $e) {
+            error_log($e->getMessage());
+
+            if ($e->getCode() == '23000') {
+                return [
+                    'success' => false,
+                    'message' => 'Cet email est déjà utilisé'
+                ];
+            }
+
+            return [
+                'success' => false,
+                'message' => 'Erreur lors de la mise à jour du profil'
+            ];
+        }
+    }
 }

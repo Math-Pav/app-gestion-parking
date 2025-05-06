@@ -71,9 +71,12 @@ if (strpos($path, '/api/') === 0) {
     } elseif ($path === '/api/register') {
         $controller = new RegisterController();
         $controller->handleRegister();
-    }  elseif ($path === '/api/profile') {
+    } elseif ($path === '/api/profile') {
         $controller = new UserController();
         $controller->getProfile();
+    } elseif ($path === '/api/profile/update') {
+        $controller = new UserController();
+        $controller->updateProfile();
     } else {
         header("HTTP/1.0 404 Not Found");
         echo json_encode(['error' => 'API endpoint non trouvé']);

@@ -2,6 +2,7 @@ class ProfileController {
     constructor() {
         this.initElements();
         this.loadProfile();
+        this.bindEvents();
     }
 
     initElements() {
@@ -14,15 +15,25 @@ class ProfileController {
             status: document.querySelector('#status'),
             message: document.querySelector('#message'),
             activeReservations: document.querySelector('#activeReservations'),
-            totalReservations: document.querySelector('#totalReservations')
+            totalReservations: document.querySelector('#totalReservations'),
+            editProfileBtn: document.querySelector('#editProfileBtn'),
+            editProfileModal: new bootstrap.Modal(document.querySelector('#editProfileModal')),
+            editName: document.querySelector('#editName'),
+            editEmail: document.querySelector('#editEmail'),
+            editPhone: document.querySelector('#editPhone'),
+            saveProfileBtn: document.querySelector('#saveProfileBtn')
         };
+    }
+
+    bindEvents() {
+        this.elements.editProfileBtn.addEventListener('click', () => this.showEditModal());
+        this.elements.saveProfileBtn.addEventListener('click', () => this.saveProfile());
     }
 
     async loadProfile() {
         try {
             const response = await fetch('/projet_parking/api/profile');
             const result = await response.json();
-            console.log('Données reçues:', result);
 
             if (result.success && result.user) {
                 this.updateProfileData(result.user);
@@ -31,7 +42,7 @@ class ProfileController {
             }
         } catch (error) {
             console.error('Erreur:', error);
-            this.showError('Erreur lors du chargement du profil');
+            this.showMessage('Erreur lors du chargement du profil', 'danger');
         }
     }
 
@@ -40,7 +51,6 @@ class ProfileController {
 
         this.elements.name.textContent = user.name;
         this.elements.email.textContent = user.email;
-
         this.elements.phone.textContent = user.phone || 'Non renseigné';
 
         if (user.role === "admin") {
@@ -65,10 +75,48 @@ class ProfileController {
         this.elements.totalReservations.textContent = '0';
     }
 
-    showError(message) {
+    showEditModal() {
+        this.elements.editName.value = this.elements.name.textContent;
+        this.elements.editEmail.value = this.elements.email.textContent;
+        this.elements.editPhone.value = this.elements.phone.textContent === 'Non renseigné' ? '' : this.elements.phone.textContent;
+        this.elements.editProfileModal.show();
+    }
+
+    async saveProfile() {
+        try {
+            const response = await fetch('/projet_parking/api/profile/update', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    name: this.elements.editName.value,
+                    email: this.elements.editEmail.value,
+                    phone: this.elements.editPhone.value
+                })
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                this.elements.editProfileModal.hide();
+                await this.loadProfile();
+                this.showMessage('Profil mis à jour avec succès', 'success');
+            } else {
+                throw new Error(result.message || 'Erreur lors de la mise à jour');
+            }
+        } catch (error) {
+            this.showMessage(error.message, 'danger');
+        }
+    }
+
+    showMessage(message, type) {
         this.elements.message.textContent = message;
-        this.elements.message.className = 'alert alert-danger';
+        this.elements.message.className = `alert alert-${type}`;
         this.elements.message.style.display = 'block';
+        setTimeout(() => {
+            this.elements.message.style.display = 'none';
+        }, 3000);
     }
 }
 
