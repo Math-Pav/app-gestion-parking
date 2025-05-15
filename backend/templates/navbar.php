@@ -1,5 +1,7 @@
 <?php
-$userName = isset($_SESSION['user']['name']) ? htmlspecialchars($_SESSION['user']['name']) : 'Utilisateur';
+$name = isset($_SESSION['user']['name']) && !empty($_SESSION['user']['name'])
+    ? htmlspecialchars($_SESSION['user']['name'])
+    : 'Utilisateur';
 ?>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
     <div class="container-fluid">
@@ -27,7 +29,7 @@ $userName = isset($_SESSION['user']['name']) ? htmlspecialchars($_SESSION['user'
             <ul class="navbar-nav">
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
-                        <i class="bi bi-person-circle"></i> <?php echo $userName; ?>
+                        <i class="bi bi-person-circle"></i> <?php echo $name; ?>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end">
                         <li><a class="dropdown-item" href="/projet_parking/profile">Mon profil</a></li>

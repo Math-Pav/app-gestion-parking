@@ -23,7 +23,12 @@ class UserController {
         $userId = $_SESSION['user']['id'];
         $result = $this->userModel->getUserProfile($userId);
 
+        if ($result['success']) {
+            $_SESSION['user']['name'] = $result['user']['name'] ?? '';
+        }
+
         http_response_code($result['success'] ? 200 : 404);
         echo json_encode($result);
     }
+
 }
