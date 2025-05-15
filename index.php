@@ -6,6 +6,7 @@ session_start();
 require_once __DIR__ . '/backend/controllers/LoginController.php';
 require_once __DIR__ . '/backend/controllers/RegisterController.php';
 require_once __DIR__ . '/backend/controllers/UserController.php';
+require_once __DIR__ . '/backend/controllers/ReservationController.php';
 
 
 define('BASE_PATH', '/projet_parking');
@@ -89,7 +90,17 @@ if (strpos($path, '/api/') === 0) {
     }  elseif ($path === '/api/profile') {
         $controller = new UserController();
         $controller->getProfile();
-    } else {
+    }  elseif ($path === '/api/reservations/create') {
+        $controller = new ReservationController();
+        $data = json_decode(file_get_contents('php://input'), true);
+        $controller->createReservation();
+    }  elseif ($path === '/api/reservations/available-spots') {
+        $controller = new ReservationController();
+        $controller->getAvailableSpots();
+    }  elseif ($path === '/api/reservations/update-status') {
+        $controller = new ReservationController();
+        $controller->updateReservationStatus();
+    }  else {
         header("HTTP/1.0 404 Not Found");
         echo json_encode(['error' => 'API endpoint non trouvé']);
     }

@@ -70,5 +70,4 @@ class UserLoginController {
         this.elements.message.className = `message ${type}`;
     }
 }
-
-new UserLoginController();
+document.addEventListener('DOMContentLoaded', () => new UserLoginController());

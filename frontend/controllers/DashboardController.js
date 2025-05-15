@@ -57,5 +57,4 @@ class DashboardController {
         }, 3000);
     }
 }
-
-new DashboardController();
+document.addEventListener('DOMContentLoaded', () => new DashboardController());
