@@ -25,31 +25,44 @@ class ReservationModel {
     }
     public function getAvailableSpots($type, $startDate, $endDate)
     {
-        $query = "SELECT p.id, p.number_place as spot_number 
+        $typeMapping = [
+            'voiture' => 'voiture',
+            'moto' => 'moto',
+            'electrique' => 'voiture_electrique'
+        ];
+
+        $placeType = $typeMapping[$type] ?? $type;
+
+        $query = "SELECT p.id, p.number_place as spot_number, p.type_place
               FROM parking p
-              WHERE p.id NOT IN (
+              WHERE p.type_place = ?
+              AND p.id NOT IN (
                   SELECT r.parking_id
                   FROM reservations r
                   WHERE r.status IN ('reserver', 'en_cours')
                   AND ((r.start_date <= ? AND r.end_date >= ?)
                   OR (r.start_date <= ? AND r.end_date >= ?))
-              )";
+              )
+              ORDER BY p.number_place";
 
         $stmt = $this->conn->prepare($query);
-        $stmt->execute([$endDate, $startDate, $startDate, $endDate]);
+        $stmt->execute([$placeType, $endDate, $startDate, $startDate, $endDate]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function checkSpotAvailability($parkingId, $startDate, $endDate) {
-        $query = "SELECT COUNT(*) FROM reservations 
-                  WHERE parking_id = ? 
-                  AND status IN ('reserver', 'en_cours')
-                  AND ((start_date BETWEEN ? AND ?) 
-                  OR (end_date BETWEEN ? AND ?))";
+    public function checkSpotAvailability($parkingId, $type, $startDate, $endDate) {
+        $query = "SELECT COUNT(*) FROM reservations r
+              JOIN parking p ON p.id = r.parking_id
+              WHERE r.parking_id = ?
+              AND p.type_place = ?
+              AND r.status IN ('reserver', 'en_cours')
+              AND ((r.start_date BETWEEN ? AND ?)
+              OR (r.end_date BETWEEN ? AND ?))";
 
         $stmt = $this->conn->prepare($query);
         $stmt->execute([
             $parkingId,
+            $type,
             $startDate,
             $endDate,
             $startDate,
