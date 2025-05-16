@@ -23,14 +23,6 @@ class ReservationModel {
             $endDate
         ]);
     }
-
-    public function getUserReservations($userId) {
-        $query = "SELECT * FROM reservations WHERE user_id = ? ORDER BY start_date DESC";
-        $stmt = $this->conn->prepare($query);
-        $stmt->execute([$userId]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-
     public function getAvailableSpots($type, $startDate, $endDate)
     {
         $query = "SELECT p.id, p.number_place as spot_number 
@@ -73,10 +65,56 @@ class ReservationModel {
         return $stmt->execute([$status, $reservationId]);
     }
 
-    public function getReservationById($reservationId) {
-        $query = "SELECT * FROM reservations WHERE id = ?";
+    public function getReservationById($reservationId, $userId) {
+        $query = "SELECT r.*,
+              p.number_place,
+              p.type_place,
+              TIMESTAMPDIFF(HOUR, r.start_date, r.end_date) as duration
+              FROM reservations r
+              JOIN parking p ON r.parking_id = p.id
+              WHERE r.id = ? AND r.user_id = ?";
+
         $stmt = $this->conn->prepare($query);
-        $stmt->execute([$reservationId]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        $stmt->execute([$reservationId, $userId]);
+        $reservation = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($reservation) {
+            return [
+                'success' => true,
+                'reservation' => [
+                    'id' => $reservation['id'],
+                    'place_number' => $reservation['number_place'],
+                    'type' => $reservation['type_place'],
+                    'price' => $reservation['price'],
+                    'start_date' => $reservation['start_date'],
+                    'end_date' => $reservation['end_date'],
+                    'duration' => $reservation['duration'],
+                    'status' => $reservation['status']
+                ]
+            ];
+        }
+
+        return [
+            'success' => false,
+            'message' => 'Réservation non trouvée'
+        ];
+    }
+    public function getActiveReservation($userId) {
+        $query = "SELECT id FROM reservations 
+              WHERE user_id = ? AND status = 'reserver' 
+              ORDER BY start_date DESC LIMIT 1";
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute([$userId]);
+        $reservation = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($reservation) {
+            return $this->getReservationById($reservation['id'], $userId);
+        }
+
+        return [
+            'success' => false,
+            'message' => 'Aucune réservation active trouvée'
+        ];
     }
 }

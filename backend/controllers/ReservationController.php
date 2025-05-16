@@ -132,4 +132,49 @@ class ReservationController
             strtotime($data['end_date']) &&
             strtotime($data['start_date']) < strtotime($data['end_date']);
     }
+
+    public function getReservationDetails() {
+        if (!isset($_GET['id'])) {
+            http_response_code(400);
+            echo json_encode([
+                'success' => false,
+                'message' => 'ID de réservation manquant'
+            ]);
+            return;
+        }
+
+        $reservationId = intval($_GET['id']);
+        $userId = $_SESSION['user']['id'] ?? null;
+
+        if (!$userId) {
+            http_response_code(401);
+            echo json_encode([
+                'success' => false,
+                'message' => 'Utilisateur non connecté'
+            ]);
+            return;
+        }
+
+        $result = $this->reservationModel->getReservationById($reservationId);
+
+        header('Content-Type: application/json');
+        echo json_encode($result);
+    }
+    public function getLatestReservation() {
+        $userId = $_SESSION['user']['id'] ?? null;
+
+        if (!$userId) {
+            http_response_code(401);
+            echo json_encode([
+                'success' => false,
+                'message' => 'Utilisateur non connecté'
+            ]);
+            return;
+        }
+
+        $result = $this->reservationModel->getActiveReservation($userId);
+
+        header('Content-Type: application/json');
+        echo json_encode($result);
+    }
 }

@@ -100,6 +100,10 @@ if (strpos($path, '/api/') === 0) {
     }  elseif ($path === '/api/reservations/update-status') {
         $controller = new ReservationController();
         $controller->updateReservationStatus();
+    }  elseif ($path === '/api/reservation/latest' && $_SERVER['REQUEST_METHOD'] === 'GET') {
+        $reservationController = new ReservationController();
+        $reservationController->getLatestReservation();
+        exit;
     }  else {
         header("HTTP/1.0 404 Not Found");
         echo json_encode(['error' => 'API endpoint non trouvé']);
