@@ -20,27 +20,79 @@ class ReservationController {
             recapDuree: document.getElementById('recapDuree'),
             recapPrix: document.getElementById('recapPrix'),
             availableSpots: document.getElementById('availableSpots'),
-            totalSpots: document.getElementById('totalSpots')
+            totalSpots: document.getElementById('totalSpots'),
+            cancelBtn: document.getElementById('cancelReservation')
         };
     }
 
     bindEvents() {
         this.elements.form.addEventListener('submit', (e) => this.handleSubmit(e));
+
         this.elements.vehicleTypeInputs.forEach(input => {
             input.addEventListener('change', () => {
                 this.updateRecap();
                 this.loadAvailableSpots();
             });
         });
+
         this.elements.parkingSpotSelect.addEventListener('change', () => this.updateRecap());
+
         this.elements.startDateTime.addEventListener('change', () => {
             this.updateRecap();
             this.loadAvailableSpots();
         });
+
         this.elements.endDateTime.addEventListener('change', () => {
             this.updateRecap();
             this.loadAvailableSpots();
         });
+
+        if (this.elements.cancelBtn) {
+            this.elements.cancelBtn.addEventListener('click', () => this.handleCancelReservation());
+        }
+    }
+
+    async handleCancelReservation() {
+        const result = await Swal.fire({
+            title: 'Êtes-vous sûr ?',
+            text: 'Voulez-vous vraiment annuler cette réservation ?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Oui, annuler',
+            cancelButtonText: 'Non, garder',
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6'
+        });
+
+        if (result.isConfirmed) {
+            try {
+                const response = await fetch(`${this.api.baseUrl}/cancel`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        reservation_id: this.currentReservationId
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    Swal.fire({
+                        title: 'Annulée !',
+                        text: 'Votre réservation a été annulée avec succès',
+                        icon: 'success'
+                    }).then(() => {
+                        window.location.href = '/projet_parking/profile';
+                    });
+                } else {
+                    this.displayMessage(data.message || 'Erreur lors de l\'annulation', 'error');
+                }
+            } catch (error) {
+                this.displayMessage('Erreur de connexion au serveur', 'error');
+            }
+        }
     }
 
     updateRecap() {

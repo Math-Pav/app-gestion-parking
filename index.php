@@ -59,6 +59,11 @@ $routes = [
         'auth' => true,
         'js' => ['frontend/controllers/ProfileController.js']
     ],
+    '/mes-reservations' => [
+        'view' => 'frontend/views/my-reservation.html',
+        'auth' => true,
+        'js' => ['frontend/controllers/MyReservationController.js']
+    ]
 
 ];
 
@@ -98,6 +103,12 @@ if (strpos($path, '/api/') === 0) {
     }  elseif ($path === '/api/reservation/latest' && $_SERVER['REQUEST_METHOD'] === 'GET') {
         $reservationController = new ReservationController();
         $reservationController->getLatestReservation();
+    }  elseif ($path === '/api/reservations/cancel') {
+        $controller = new ReservationController();
+        $controller->cancelReservation();
+    }  elseif ($path === '/api/reservations/user-reservations') {
+        $controller = new ReservationController();
+        $controller->getUserReservations();
     }  else {
         header("HTTP/1.0 404 Not Found");
         echo json_encode(['error' => 'API endpoint non trouvé']);

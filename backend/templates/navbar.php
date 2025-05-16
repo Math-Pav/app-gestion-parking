@@ -34,6 +34,8 @@ $name = isset($_SESSION['user']['name']) && !empty($_SESSION['user']['name'])
                     <ul class="dropdown-menu dropdown-menu-end">
                         <li><a class="dropdown-item" href="/projet_parking/profile">Mon profil</a></li>
                         <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="/projet_parking/mes-reservations">Mes réservations</a></li>
+                        <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="#" id="logoutBtn">Déconnexion</a></li>
                     </ul>
                 </li>

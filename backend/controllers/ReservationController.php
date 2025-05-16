@@ -88,6 +88,41 @@ class ReservationController
         }
     }
 
+    public function cancelReservation() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            http_response_code(405);
+            echo json_encode(['error' => 'Méthode non autorisée']);
+            return;
+        }
+
+        $data = json_decode(file_get_contents('php://input'), true);
+        $userId = $_SESSION['user']['id'] ?? null;
+
+        if (!$userId || !isset($data['reservation_id'])) {
+            http_response_code(400);
+            echo json_encode(['error' => 'Données manquantes']);
+            return;
+        }
+
+        $success = $this->reservationModel->cancelReservation(
+            $data['reservation_id'],
+            $userId
+        );
+
+        if ($success) {
+            echo json_encode([
+                'success' => true,
+                'message' => 'Réservation annulée avec succès'
+            ]);
+        } else {
+            http_response_code(500);
+            echo json_encode([
+                'success' => false,
+                'message' => 'Erreur lors de l\'annulation'
+            ]);
+        }
+    }
+
     public function getAvailableSpots()
     {
         $type = $_GET['type'] ?? null;
@@ -193,5 +228,25 @@ class ReservationController
 
         header('Content-Type: application/json');
         echo json_encode($result);
+    }
+
+    public function getUserReservations() {
+        $userId = $_SESSION['user']['id'] ?? null;
+
+        if (!$userId) {
+            http_response_code(401);
+            echo json_encode([
+                'success' => false,
+                'message' => 'Utilisateur non connecté'
+            ]);
+            return;
+        }
+
+        $reservations = $this->reservationModel->getUserReservations($userId);
+
+        echo json_encode([
+            'success' => true,
+            'reservations' => $reservations
+        ]);
     }
 }

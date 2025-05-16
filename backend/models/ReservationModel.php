@@ -145,4 +145,27 @@ class ReservationModel {
         $stmt = $this->conn->prepare($query);
         return $stmt->execute();
     }
+
+    public function cancelReservation($reservationId, $userId) {
+        $query = "DELETE FROM reservations 
+              WHERE id = ? 
+              AND user_id = ? 
+              AND status IN ('reserver', 'en_cours')";
+
+        $stmt = $this->conn->prepare($query);
+        return $stmt->execute([$reservationId, $userId]);
+    }
+
+    public function getUserReservations($userId) {
+        $query = "SELECT r.*, p.number_place, p.type_place,
+              TIMESTAMPDIFF(HOUR, r.start_date, r.end_date) as duration
+              FROM reservations r
+              JOIN parking p ON r.parking_id = p.id
+              WHERE r.user_id = ?
+              ORDER BY r.start_date DESC";
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute([$userId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
