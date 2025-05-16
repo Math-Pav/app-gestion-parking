@@ -101,8 +101,22 @@ class ReservationController {
             const data = await response.json();
 
             if (data.success) {
-                this.displayMessage('Réservation créée avec succès!', 'success');
-                window.location.href = '/projet_parking/profile';
+                Swal.fire({
+                    title: 'Réservation créée !',
+                    text: 'Votre réservation a été enregistrée avec succès. Voulez-vous aller à votre profil ?',
+                    icon: 'success',
+                    showCancelButton: true,
+                    confirmButtonText: 'Voir mon profil',
+                    cancelButtonText: 'Rester ici'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = '/projet_parking/profile';
+                    } else {
+                        this.elements.form.reset();
+                        this.elements.parkingSpotSelect.innerHTML = '<option value="">Sélectionnez d\'abord un type de véhicule</option>';
+                        this.updateRecap();
+                    }
+                });
             } else {
                 this.displayMessage(data.message || 'Une erreur est survenue', 'error');
             }

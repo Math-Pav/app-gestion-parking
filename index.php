@@ -44,11 +44,6 @@ $routes = [
         'auth' => true,
         'js' => ['frontend/controllers/ReservationController.js']
     ],
-    '/next-paiement' => [
-        'view' => 'frontend/views/next-paiement.html',
-        'auth' => true,
-        'js' => ['frontend/controllers/NextPaiementController.js']
-    ],
     '/paiement' => [
         'view' => 'frontend/views/paiement.html',
         'auth' => true,
@@ -103,7 +98,6 @@ if (strpos($path, '/api/') === 0) {
     }  elseif ($path === '/api/reservation/latest' && $_SERVER['REQUEST_METHOD'] === 'GET') {
         $reservationController = new ReservationController();
         $reservationController->getLatestReservation();
-        exit;
     }  else {
         header("HTTP/1.0 404 Not Found");
         echo json_encode(['error' => 'API endpoint non trouvé']);

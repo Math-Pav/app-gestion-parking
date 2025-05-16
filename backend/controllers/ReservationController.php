@@ -22,6 +22,9 @@ class ReservationController
             return;
         }
 
+        // Met d'abord à jour les réservations expirées
+        $this->reservationModel->updateExpiredReservations();
+
         $data = json_decode(file_get_contents('php://input'), true);
         $userId = $_SESSION['user']['id'] ?? null;
 
@@ -33,7 +36,10 @@ class ReservationController
 
         if (!$this->validateReservationData($data)) {
             http_response_code(400);
-            echo json_encode(['error' => 'Données invalides']);
+            echo json_encode([
+                'success' => false,
+                'message' => 'Données invalides: vérifiez le type de véhicule, les dates et le prix'
+            ]);
             return;
         }
 
@@ -43,8 +49,18 @@ class ReservationController
             $data['end_date']
         )) {
             http_response_code(409);
-            echo json_encode(['error' => 'Place déjà réservée']);
+            echo json_encode(['success' => false, 'message' => 'Place déjà réservée']);
             return;
+        }
+
+        $currentDateTime = new DateTime('now');
+        $startDateTime = new DateTime($data['start_date']);
+        $endDateTime = new DateTime($data['end_date']);
+
+        $initialStatus = ($currentDateTime >= $startDateTime) ? 'en_cours' : 'reserver';
+
+        if ($currentDateTime > $endDateTime) {
+            $initialStatus = 'terminer';
         }
 
         $success = $this->reservationModel->createReservation(
@@ -52,15 +68,23 @@ class ReservationController
             $data['parking_id'],
             $data['price'],
             $data['start_date'],
-            $data['end_date']
+            $data['end_date'],
+            $initialStatus
         );
 
         if ($success) {
             http_response_code(201);
-            echo json_encode(['message' => 'Réservation créée avec succès']);
+            echo json_encode([
+                'success' => true,
+                'message' => 'Réservation créée avec succès',
+                'status' => $initialStatus
+            ]);
         } else {
             http_response_code(500);
-            echo json_encode(['error' => 'Erreur lors de la création de la réservation']);
+            echo json_encode([
+                'success' => false,
+                'message' => 'Erreur lors de la création de la réservation'
+            ]);
         }
     }
 
@@ -126,17 +150,30 @@ class ReservationController
     {
         $validTypes = ['voiture', 'moto', 'electrique'];
 
-        if (!isset($data['type']) || !in_array($data['type'], $validTypes)) {
+        // Vérifie si toutes les données requises sont présentes
+        if (!isset($data['parking_id']) ||
+            !isset($data['vehicle_type']) ||  // Changé de 'type' à 'vehicle_type'
+            !isset($data['price']) ||
+            !isset($data['start_date']) ||
+            !isset($data['end_date'])) {
             return false;
         }
 
-        return isset($data['parking_id']) &&
-            isset($data['price']) &&
-            isset($data['start_date']) &&
-            isset($data['end_date']) &&
-            strtotime($data['start_date']) &&
-            strtotime($data['end_date']) &&
-            strtotime($data['start_date']) < strtotime($data['end_date']);
+        if (!in_array($data['vehicle_type'], $validTypes)) {  // Changé de 'type' à 'vehicle_type'
+            return false;
+        }
+
+        if (!strtotime($data['start_date']) ||
+            !strtotime($data['end_date']) ||
+            strtotime($data['start_date']) >= strtotime($data['end_date'])) {
+            return false;
+        }
+
+        if (!is_numeric($data['price']) || $data['price'] < 0) {
+            return false;
+        }
+
+        return true;
     }
 
 

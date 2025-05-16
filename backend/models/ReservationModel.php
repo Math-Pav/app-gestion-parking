@@ -9,10 +9,10 @@ class ReservationModel {
         $this->conn = $database->connect();
     }
 
-    public function createReservation($userId, $parkingId, $price, $startDate, $endDate) {
+    public function createReservation($userId, $parkingId, $price, $startDate, $endDate, $status = 'reserver') {
         $query = "INSERT INTO reservations 
-                  (user_id, parking_id, price, start_date, end_date, status)
-                  VALUES (?, ?, ?, ?, ?, 'reserver')";
+              (user_id, parking_id, price, start_date, end_date, status)
+              VALUES (?, ?, ?, ?, ?, ?)";
 
         $stmt = $this->conn->prepare($query);
         return $stmt->execute([
@@ -20,11 +20,11 @@ class ReservationModel {
             $parkingId,
             $price,
             $startDate,
-            $endDate
+            $endDate,
+            $status
         ]);
     }
-    public function getAvailableSpots($type, $startDate, $endDate)
-    {
+    public function getAvailableSpots($type, $startDate, $endDate) {
         $typeMapping = [
             'voiture' => 'voiture',
             'moto' => 'moto',
@@ -33,38 +33,44 @@ class ReservationModel {
 
         $placeType = $typeMapping[$type] ?? $type;
 
-        $query = "SELECT p.id, p.number_place as spot_number, p.type_place
-              FROM parking p
-              WHERE p.type_place = ?
-              AND p.id NOT IN (
-                  SELECT r.parking_id
-                  FROM reservations r
-                  WHERE r.status IN ('reserver', 'en_cours')
-                  AND ((r.start_date <= ? AND r.end_date >= ?)
-                  OR (r.start_date <= ? AND r.end_date >= ?))
+        $query = "SELECT DISTINCT p.id, p.number_place, p.type_place 
+              FROM parking p 
+              LEFT JOIN reservations r ON p.id = r.parking_id 
+              AND r.status IN ('reserver', 'en_cours')
+              AND (
+                  (r.start_date <= ? AND r.end_date >= ?)
+                  OR (r.start_date <= ? AND r.end_date >= ?)
+                  OR (r.start_date BETWEEN ? AND ?)
+                  OR (r.end_date BETWEEN ? AND ?)
               )
+              WHERE p.type_place = ?
+              AND r.id IS NULL
               ORDER BY p.number_place";
 
         $stmt = $this->conn->prepare($query);
-        $stmt->execute([$placeType, $endDate, $startDate, $startDate, $endDate]);
+        $stmt->execute([
+            $endDate, $startDate,
+            $startDate, $endDate,
+            $startDate, $endDate,
+            $startDate, $endDate,
+            $placeType
+        ]);
+
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function checkSpotAvailability($parkingId, $type, $startDate, $endDate) {
-        $query = "SELECT COUNT(*) FROM reservations r
-              JOIN parking p ON p.id = r.parking_id
+    public function checkSpotAvailability($parkingId, $startDate, $endDate) {
+        $query = "SELECT COUNT(*) 
+              FROM reservations r 
               WHERE r.parking_id = ?
-              AND p.type_place = ?
               AND r.status IN ('reserver', 'en_cours')
-              AND ((r.start_date BETWEEN ? AND ?)
-              OR (r.end_date BETWEEN ? AND ?))";
+              AND (
+                  (? <= r.end_date AND ? >= r.start_date)
+              )";
 
         $stmt = $this->conn->prepare($query);
         $stmt->execute([
             $parkingId,
-            $type,
-            $startDate,
-            $endDate,
             $startDate,
             $endDate
         ]);
@@ -129,5 +135,14 @@ class ReservationModel {
             'success' => false,
             'message' => 'Aucune réservation active trouvée'
         ];
+    }
+    public function updateExpiredReservations() {
+        $query = "UPDATE reservations 
+              SET status = 'terminer' 
+              WHERE end_date < NOW() 
+              AND status IN ('reserver', 'en_cours')";
+
+        $stmt = $this->conn->prepare($query);
+        return $stmt->execute();
     }
 }
