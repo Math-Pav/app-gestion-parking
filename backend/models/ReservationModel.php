@@ -11,18 +11,23 @@ class ReservationModel {
 
     public function createReservation($userId, $parkingId, $price, $startDate, $endDate, $status = 'reserver') {
         $query = "INSERT INTO reservations 
-              (user_id, parking_id, price, start_date, end_date, status)
-              VALUES (?, ?, ?, ?, ?, ?)";
+        (user_id, parking_id, price, start_date, end_date, status) 
+        VALUES (:user_id, :parking_id, :price, :start_date, :end_date, :status)";
 
-        $stmt = $this->conn->prepare($query);
-        return $stmt->execute([
-            $userId,
-            $parkingId,
-            $price,
-            $startDate,
-            $endDate,
-            $status
-        ]);
+        try {
+            $stmt = $this->conn->prepare($query);
+            return $stmt->execute([
+                ':user_id' => $userId,
+                ':parking_id' => $parkingId,
+                ':price' => $price,
+                ':start_date' => $startDate,
+                ':end_date' => $endDate,
+                ':status' => $status
+            ]);
+        } catch (PDOException $e) {
+            error_log($e->getMessage());
+            throw $e;
+        }
     }
     public function getAvailableSpots($type, $startDate, $endDate) {
         $typeMapping = [
@@ -61,12 +66,12 @@ class ReservationModel {
 
     public function checkSpotAvailability($parkingId, $startDate, $endDate) {
         $query = "SELECT COUNT(*) 
-              FROM reservations r 
-              WHERE r.parking_id = ?
-              AND r.status IN ('reserver', 'en_cours')
-              AND (
-                  (? <= r.end_date AND ? >= r.start_date)
-              )";
+          FROM reservations r 
+          WHERE r.parking_id = ?
+          AND r.status IN ('reserver', 'en_cours', 'attente')
+          AND (
+              (? <= r.end_date AND ? >= r.start_date)
+          )";
 
         $stmt = $this->conn->prepare($query);
         $stmt->execute([

@@ -110,6 +110,9 @@ if (strpos($path, '/api/') === 0) {
     }  elseif ($path === '/api/reservations/user-reservations') {
         $controller = new ReservationController();
         $controller->getUserReservations();
+    }  elseif ($path === '/api/reservations/get-reservation') {
+        $controller = new ReservationController();
+        $controller->getReservationById();
     }  else {
         header("HTTP/1.0 404 Not Found");
         echo json_encode(['error' => 'API endpoint non trouvé']);

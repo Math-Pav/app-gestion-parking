@@ -154,19 +154,17 @@ class ReservationController {
 
             if (data.success) {
                 Swal.fire({
-                    title: 'Réservation créée !',
-                    text: 'Votre réservation a été enregistrée avec succès. Voulez-vous aller à votre profil ?',
-                    icon: 'success',
+                    title: 'Réservation en attente',
+                    text: 'Votre réservation est en attente de paiement. Voulez-vous procéder au paiement maintenant ?',
+                    icon: 'info',
                     showCancelButton: true,
-                    confirmButtonText: 'Voir mon profil',
-                    cancelButtonText: 'Rester ici'
+                    confirmButtonText: 'Payer maintenant',
+                    cancelButtonText: 'Plus tard'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        window.location.href = '/app-gestion-parking/profile';
+                        window.location.href = `/app-gestion-parking/payment?reservation_id=${data.reservation_id}`;
                     } else {
-                        this.elements.form.reset();
-                        this.elements.parkingSpotSelect.innerHTML = '<option value="">Sélectionnez d\'abord un type de véhicule</option>';
-                        this.updateRecap();
+                        window.location.href = '/app-gestion-parking/profile';
                     }
                 });
             } else {

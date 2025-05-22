@@ -22,7 +22,6 @@ class ReservationController
             return;
         }
 
-        // Met d'abord à jour les réservations expirées
         $this->reservationModel->updateExpiredReservations();
 
         $data = json_decode(file_get_contents('php://input'), true);
@@ -53,15 +52,7 @@ class ReservationController
             return;
         }
 
-        $currentDateTime = new DateTime('now');
-        $startDateTime = new DateTime($data['start_date']);
-        $endDateTime = new DateTime($data['end_date']);
-
-        $initialStatus = ($currentDateTime >= $startDateTime) ? 'en_cours' : 'reserver';
-
-        if ($currentDateTime > $endDateTime) {
-            $initialStatus = 'terminer';
-        }
+        $initialStatus = 'attente';
 
         $success = $this->reservationModel->createReservation(
             $userId,
@@ -73,11 +64,13 @@ class ReservationController
         );
 
         if ($success) {
+            $reservationId = $this->reservationModel->getLastInsertId();
             http_response_code(201);
             echo json_encode([
                 'success' => true,
-                'message' => 'Réservation créée avec succès',
-                'status' => $initialStatus
+                'message' => 'Réservation en attente de paiement',
+                'status' => $initialStatus,
+                'reservation_id' => $reservationId
             ]);
         } else {
             http_response_code(500);
@@ -143,6 +136,21 @@ class ReservationController
             'success' => true,
             'spots' => $spots
         ]);
+    }
+
+    public function getReservationById() {
+        if (!isset($_GET['id'])) {
+            echo json_encode(['success' => false, 'message' => 'ID de réservation manquant']);
+            return;
+        }
+
+        $reservationId = $_GET['id'];
+        $userId = $_SESSION['user']['id'];
+
+        $result = $this->reservationModel->getReservationById($reservationId, $userId);
+
+        header('Content-Type: application/json');
+        echo json_encode($result);
     }
 
     public function updateReservationStatus()

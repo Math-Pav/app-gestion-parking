@@ -23,6 +23,7 @@ class MyReservationController {
                 this.displayMessage(data.message || 'Erreur de chargement', 'danger');
             }
         } catch (error) {
+            console.error('Erreur de chargement:', error);
             this.displayMessage('Erreur de connexion au serveur', 'danger');
         }
     }
@@ -43,22 +44,64 @@ class MyReservationController {
             const endDate = new Date(reservation.end_date).toLocaleString('fr-FR');
 
             return `
-            <tr>
+            <tr data-reservation-id="${reservation.id}">
                 <td>Place ${reservation.number_place}</td>
                 <td>${this.formatVehicleType(reservation.type_place)}</td>
                 <td>${startDate}</td>
                 <td>${endDate}</td>
                 <td>${reservation.duration}h</td>
                 <td>${reservation.price}€</td>
-                <td><span class="badge bg-${this.getStatusColor(reservation.status)}">${this.formatStatus(reservation.status)}</span></td>
                 <td>
-                    ${reservation.status === 'reserver' ?
-                `<button class="btn btn-danger btn-sm" onclick="myReservationController.cancelReservation(${reservation.id})">
-                            <i class="bi bi-x-circle"></i> Annuler
-                        </button>` : ''}
+                    <span class="badge bg-${this.getStatusColor(reservation.status)}">
+                        ${this.formatStatus(reservation.status)}
+                    </span>
+                </td>
+                <td class="text-center">
+                    ${this.getActionButtons(reservation)}
                 </td>
             </tr>`;
         }).join('');
+
+        // Ajout des écouteurs d'événements pour les lignes du tableau
+        this.attachRowClickHandlers();
+    }
+
+    attachRowClickHandlers() {
+        const rows = this.elements.tableBody.getElementsByTagName('tr');
+        for (const row of rows) {
+            row.style.cursor = 'pointer';
+            row.addEventListener('click', () => {
+                const reservationId = row.dataset.reservationId;
+                if (reservationId) {
+                    window.location.href = `/app-gestion-parking/paiement?id=${reservationId}`;
+                    // Notez que j'ai retiré le .html
+                }
+            });
+        }
+    }
+
+    getActionButtons(reservation) {
+        let buttons = [];
+
+        if (reservation.status === 'attente') {
+            buttons.push(`
+                <a href="/app-gestion-parking/paiement?id=${reservation.id}"
+                   class="btn btn-primary btn-sm me-2">
+                    <i class="bi bi-credit-card"></i> Payer
+                </a>`
+            );
+        }
+
+        if (reservation.status === 'reserver') {
+            buttons.push(`
+                <button class="btn btn-danger btn-sm"
+                        onclick="event.stopPropagation(); myReservationController.cancelReservation(${reservation.id})">
+                    <i class="bi bi-x-circle"></i> Annuler
+                </button>`
+            );
+        }
+
+        return buttons.join('');
     }
 
     formatVehicleType(type) {
@@ -72,6 +115,7 @@ class MyReservationController {
 
     formatStatus(status) {
         const statuses = {
+            'attente': 'En attente',
             'reserver': 'Réservée',
             'en_cours': 'En cours',
             'terminer': 'Terminée',
@@ -82,6 +126,7 @@ class MyReservationController {
 
     getStatusColor(status) {
         const colors = {
+            'attente': 'warning',
             'reserver': 'primary',
             'en_cours': 'success',
             'terminer': 'secondary',
@@ -91,31 +136,39 @@ class MyReservationController {
     }
 
     async cancelReservation(reservationId) {
-        if (confirm('Êtes-vous sûr de vouloir annuler cette réservation ?')) {
-            try {
-                const response = await fetch(`${this.api.baseUrl}/cancel`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ reservation_id: reservationId })
-                });
+        if (!confirm('Êtes-vous sûr de vouloir annuler cette réservation ?')) {
+            return;
+        }
 
-                const data = await response.json();
+        try {
+            const response = await fetch(`${this.api.baseUrl}/cancel`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ reservation_id: reservationId })
+            });
 
-                if (data.success) {
-                    await this.loadReservations();
-                    this.displayMessage('La réservation a été supprimée avec succès', 'success');
-                } else {
-                    this.displayMessage(data.message || 'Erreur lors de la suppression', 'danger');
-                }
-            } catch (error) {
-                this.displayMessage('Erreur de connexion au serveur', 'danger');
+            const data = await response.json();
+
+            if (data.success) {
+                await this.loadReservations();
+                this.displayMessage('La réservation a été annulée avec succès', 'success');
+            } else {
+                this.displayMessage(data.message || 'Erreur lors de l\'annulation', 'danger');
             }
+        } catch (error) {
+            console.error('Erreur annulation:', error);
+            this.displayMessage('Erreur de connexion au serveur', 'danger');
         }
     }
 
     displayMessage(text, type) {
+        if (!this.elements.errorMessage) {
+            console.error('Element errorMessage non trouvé');
+            return;
+        }
+
         this.elements.errorMessage.textContent = text;
         this.elements.errorMessage.className = `alert alert-${type}`;
         this.elements.errorMessage.style.display = 'block';

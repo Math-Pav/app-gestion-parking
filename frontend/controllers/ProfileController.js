@@ -54,11 +54,11 @@ class ProfileController {
 
         const isActive = user.status === true || user.status === 1 || user.status === "1";
         if (isActive) {
-            this.elements.status.textContent = 'Actif';
-            this.elements.status.className = 'badge rounded-pill fs-6 p-2 w-100 bg-success';
-        } else {
             this.elements.status.textContent = 'Inactif';
             this.elements.status.className = 'badge rounded-pill fs-6 p-2 w-100 bg-danger';
+        } else {
+            this.elements.status.textContent = 'Actif';
+            this.elements.status.className = 'badge rounded-pill fs-6 p-2 w-100 bg-success';
         }
 
         this.elements.activeReservations.textContent = '0';
