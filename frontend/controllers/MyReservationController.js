@@ -6,7 +6,7 @@ class MyReservationController {
         };
 
         this.api = {
-            baseUrl: '/projet_parking/api/reservations'
+            baseUrl: '/app-gestion-parking/api/reservations'
         };
 
         this.loadReservations();

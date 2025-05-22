@@ -8,7 +8,7 @@ class UserLoginController {
         };
 
         this.api = {
-            loginUrl: '/projet_parking/api/login'
+            loginUrl: '/app-gestion-parking/api/login'
         };
 
         this.bindEvents();
@@ -59,7 +59,7 @@ class UserLoginController {
     handleLoginResponse(data) {
         if (data.success) {
             this.displayMessage('Connexion réussie', 'success');
-            window.location.href = '/projet_parking/dashboard';
+            window.location.href = '/app-gestion-parking/dashboard';
         } else {
             this.displayMessage(data.message, 'error');
         }

@@ -9,7 +9,7 @@ require_once __DIR__ . '/backend/controllers/UserController.php';
 require_once __DIR__ . '/backend/controllers/ReservationController.php';
 
 
-define('BASE_PATH', '/projet_parking');
+define('BASE_PATH', '/app-gestion-parking');
 
 $staticExtensions = ['css', 'js'];
 $extension = pathinfo($_SERVER['REQUEST_URI'], PATHINFO_EXTENSION);

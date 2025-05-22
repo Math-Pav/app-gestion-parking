@@ -3,7 +3,7 @@ class ReservationController {
         this.initElements();
         this.bindEvents();
         this.api = {
-            baseUrl: '/projet_parking/api/reservations'
+            baseUrl: '/app-gestion-parking/api/reservations'
         };
     }
 
@@ -84,7 +84,7 @@ class ReservationController {
                         text: 'Votre réservation a été annulée avec succès',
                         icon: 'success'
                     }).then(() => {
-                        window.location.href = '/projet_parking/profile';
+                        window.location.href = '/app-gestion-parking/profile';
                     });
                 } else {
                     this.displayMessage(data.message || 'Erreur lors de l\'annulation', 'error');
@@ -162,7 +162,7 @@ class ReservationController {
                     cancelButtonText: 'Rester ici'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        window.location.href = '/projet_parking/profile';
+                        window.location.href = '/app-gestion-parking/profile';
                     } else {
                         this.elements.form.reset();
                         this.elements.parkingSpotSelect.innerHTML = '<option value="">Sélectionnez d\'abord un type de véhicule</option>';

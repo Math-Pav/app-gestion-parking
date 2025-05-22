@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         try {
-            const response = await fetch('/projet_parking/api/register', {
+            const response = await fetch('/app-gestion-parking/api/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (data.success) {
                 showMessage(`Vous allez être redirigé vers la page de connexion dans 5 secondes...`, 'success');
                 setTimeout(() => {
-                    window.location.href = '/projet_parking/';
+                    window.location.href = '/app-gestion-parking/';
                 }, 5000);
             } else {
                 showMessage(data.message, 'danger');

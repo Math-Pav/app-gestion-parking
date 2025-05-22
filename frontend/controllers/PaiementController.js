@@ -5,7 +5,7 @@ class PaiementController {
     }
 
     loadReservationDetails() {
-        fetch('/projet_parking/api/reservation/latest')
+        fetch('/app-gestion-parking/api/reservation/latest')
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
@@ -13,7 +13,7 @@ class PaiementController {
                 } else {
                     alert('Aucune réservation active trouvée');
                     setTimeout(() => {
-                        window.location.replace('/projet_parking/dashboard');
+                        window.location.replace('/app-gestion-parking/dashboard');
                     }, 100);
                 }
             })
@@ -48,7 +48,7 @@ class PaiementController {
             const urlParams = new URLSearchParams(window.location.search);
             const reservationId = urlParams.get('id');
 
-            fetch('/projet_parking/api/reservations/update-status', {
+            fetch('/app-gestion-parking/api/reservations/update-status', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'

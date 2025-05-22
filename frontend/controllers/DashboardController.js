@@ -9,7 +9,7 @@ class DashboardController {
         };
 
         this.api = {
-            baseUrl: '/projet_parking/api'
+            baseUrl: '/app-gestion-parking/api'
         };
 
         this.bindEvents();
@@ -37,7 +37,7 @@ class DashboardController {
             });
 
             if (response.ok) {
-                window.location.href = '/projet_parking/';
+                window.location.href = '/app-gestion-parking/';
             } else {
                 this.displayMessage('Erreur lors de la déconnexion', 'error');
             }

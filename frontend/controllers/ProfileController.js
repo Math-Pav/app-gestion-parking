@@ -20,7 +20,7 @@ class ProfileController {
 
     async loadProfile() {
         try {
-            const response = await fetch('/projet_parking/api/profile');
+            const response = await fetch('/app-gestion-parking/api/profile');
             const result = await response.json();
             console.log('Données reçues:', result);
 
