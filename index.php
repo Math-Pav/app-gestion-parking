@@ -12,9 +12,10 @@ require_once __DIR__ . '/backend/controllers/ReservationController.php';
 define('BASE_PATH', '/app-gestion-parking');
 
 $staticExtensions = ['css', 'js'];
-$extension = pathinfo($_SERVER['REQUEST_URI'], PATHINFO_EXTENSION);
+$requestUri = str_replace(BASE_PATH, '', $_SERVER['REQUEST_URI']);
+$extension = pathinfo($requestUri, PATHINFO_EXTENSION);
 if (in_array($extension, $staticExtensions)) {
-    $filePath = __DIR__ . str_replace(BASE_PATH, '', $_SERVER['REQUEST_URI']);
+    $filePath = __DIR__ . $requestUri;
     if (file_exists($filePath)) {
         $contentType = $extension === 'css' ? 'text/css' : 'application/javascript';
         header("Content-Type: $contentType");

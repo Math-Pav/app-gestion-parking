@@ -12,16 +12,16 @@ $name = isset($_SESSION['user']['name']) && !empty($_SESSION['user']['name'])
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="/projet_parking/dashboard">Tableau de bord</a>
+                    <a class="nav-link" href="<?php echo BASE_PATH; ?>/dashboard">Tableau de bord</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/projet_parking/reservation">Réservations</a>
+                    <a class="nav-link" href="<?php echo BASE_PATH; ?>/reservation">Réservations</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/projet_parking/notifications">Notifications</a>
+                    <a class="nav-link" href="<?php echo BASE_PATH; ?>/notifications">Notifications</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/projet_parking/paiement">
+                    <a class="nav-link" href="<?php echo BASE_PATH; ?>/paiement">
                         <i class="bi bi-credit-card"></i>
                     </a>
                 </li>
@@ -32,9 +32,9 @@ $name = isset($_SESSION['user']['name']) && !empty($_SESSION['user']['name'])
                         <i class="bi bi-person-circle"></i> <?php echo $name; ?>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="/projet_parking/profile">Mon profil</a></li>
+                        <li><a class="dropdown-item" href="<?php echo BASE_PATH; ?>/profile">Mon profil</a></li>
                         <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="/projet_parking/mes-reservations">Mes réservations</a></li>
+                        <li><a class="dropdown-item" href="<?php echo BASE_PATH; ?>/mes-reservations">Mes réservations</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="#" id="logoutBtn">Déconnexion</a></li>
                     </ul>
