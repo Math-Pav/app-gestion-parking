@@ -89,16 +89,23 @@ class ReservationController
         }
 
         $data = json_decode(file_get_contents('php://input'), true);
+        // Correction ici : utiliser $_SESSION['user']['id'] au lieu de $_SESSION['user_id']
         $userId = $_SESSION['user']['id'] ?? null;
 
-        if (!$userId || !isset($data['reservation_id'])) {
+        if (!$userId) {
+            http_response_code(401);
+            echo json_encode(['error' => 'Utilisateur non connecté']);
+            return;
+        }
+
+        if (!isset($data['reservation_id'])) {
             http_response_code(400);
-            echo json_encode(['error' => 'Données manquantes']);
+            echo json_encode(['error' => 'ID de réservation manquant']);
             return;
         }
 
         $success = $this->reservationModel->cancelReservation(
-            $data['reservation_id'],
+            intval($data['reservation_id']),
             $userId
         );
 

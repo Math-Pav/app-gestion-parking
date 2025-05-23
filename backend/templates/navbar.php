@@ -15,15 +15,13 @@ $name = isset($_SESSION['user']['name']) && !empty($_SESSION['user']['name'])
                     <a class="nav-link" href="<?php echo BASE_PATH; ?>/dashboard">Tableau de bord</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="<?php echo BASE_PATH; ?>/reservation">Réservations</a>
+                    <a class="nav-link" href="<?php echo BASE_PATH; ?>/reservation">Réserver</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="<?php echo BASE_PATH; ?>/notifications">Notifications</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="<?php echo BASE_PATH; ?>/paiement">
-                        <i class="bi bi-credit-card"></i>
-                    </a>
+                    <a class="nav-link" href="<?php echo BASE_PATH; ?>/mes-reservations">Mes réservations</a>
                 </li>
             </ul>
             <ul class="navbar-nav">
@@ -33,8 +31,6 @@ $name = isset($_SESSION['user']['name']) && !empty($_SESSION['user']['name'])
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end">
                         <li><a class="dropdown-item" href="<?php echo BASE_PATH; ?>/profile">Mon profil</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="<?php echo BASE_PATH; ?>/mes-reservations">Mes réservations</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="#" id="logoutBtn">Déconnexion</a></li>
                     </ul>

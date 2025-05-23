@@ -152,10 +152,18 @@ class ReservationModel {
     }
 
     public function cancelReservation($reservationId, $userId) {
+        $checkQuery = "SELECT id FROM reservations WHERE id = ? AND user_id = ?";
+        $checkStmt = $this->conn->prepare($checkQuery);
+        $checkStmt->execute([$reservationId, $userId]);
+
+        if (!$checkStmt->fetch()) {
+            return false;
+        }
+
         $query = "DELETE FROM reservations 
               WHERE id = ? 
               AND user_id = ? 
-              AND status IN ('reserver', 'en_cours')";
+              AND status IN ('reserver', 'en_cours', 'attente')";
 
         $stmt = $this->conn->prepare($query);
         return $stmt->execute([$reservationId, $userId]);
