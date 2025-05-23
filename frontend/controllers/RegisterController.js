@@ -31,7 +31,6 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        // Validation de l'email
         const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
         if (!emailRegex.test(email)) {
             showMessage('Format d\'email invalide. Exemple: exemple@exemple.com', 'danger');
