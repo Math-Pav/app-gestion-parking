@@ -1,4 +1,3 @@
-// frontend/controllers/NotificationsController.js
 class NotificationsController {
     constructor() {
         this.baseUrl = '/app-gestion-parking/api';
@@ -33,27 +32,34 @@ class NotificationsController {
     displayNotifications(notifications) {
         if (!notifications.length) {
             this.elements.notificationsList.innerHTML = `
-                <div class="text-center py-5">
-                    <i class="bi bi-bell text-muted" style="font-size: 2rem;"></i>
-                    <p class="text-muted mt-3">Aucune notification</p>
-                </div>`;
+            <div class="text-center py-5">
+                <i class="bi bi-bell text-muted" style="font-size: 2rem;"></i>
+                <p class="text-muted mt-3">Aucune notification</p>
+            </div>`;
             return;
         }
 
         this.elements.notificationsList.innerHTML = notifications
             .map(notif => `
-                <div class="notification-item ${notif.read ? 'read' : ''}" data-id="${notif.id}">
-                    <div class="d-flex align-items-center">
-                        <span class="notification-dot"></span>
-                        <div>
-                            <p class="mb-1">${notif.message}</p>
-                            <small class="text-muted">
-                                ${this.formatDate(notif.created_at)}
-                            </small>
-                        </div>
+            <div class="notification-item ${notif.read ? 'read' : ''}" data-id="${notif.id}">
+                <div class="d-flex align-items-center flex-grow-1">
+                    <span class="notification-dot"></span>
+                    <div class="notification-content flex-grow-1">
+                        <p class="mb-1">${notif.message}</p>
+                        <small class="text-muted">
+                            ${this.formatDate(notif.created_at)}
+                        </small>
                     </div>
+                    <button class="btn btn-light btn-sm mark-as-read">
+                        <i class="bi bi-check2"></i> Marquer comme lu
+                    </button>
                 </div>
-            `).join('');
+            </div>
+        `).join('');
+
+        this.elements.notificationsList.querySelectorAll('.mark-as-read').forEach(button => {
+            button.addEventListener('click', (event) => this.markAsRead(event));
+        });
     }
 
     updateNotificationCount(count) {
@@ -62,6 +68,33 @@ class NotificationsController {
             this.elements.notificationCount.textContent = count;
         } else {
             this.elements.notificationCount.style.display = 'none';
+        }
+    }
+
+    async markAsRead(event) {
+        const notificationItem = event.target.closest('.notification-item');
+        const notificationId = notificationItem.getAttribute('data-id');
+
+        try {
+            const response = await fetch(`${this.baseUrl}/notifications/mark-as-read`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ notificationId })
+            });
+
+            if (response.ok) {
+                notificationItem.classList.add('read');
+                notificationItem.querySelector('.notification-dot').style.backgroundColor = 'transparent';
+                this.updateNotificationCount(
+                    parseInt(this.elements.notificationCount.textContent, 10) - 1
+                );
+            } else {
+                console.error('Erreur lors du marquage de la notification comme lue');
+            }
+        } catch (error) {
+            console.error('Erreur réseau :', error);
         }
     }
 

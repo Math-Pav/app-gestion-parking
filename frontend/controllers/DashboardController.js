@@ -22,7 +22,7 @@ class DashboardController {
         });
 
         this.elements.newReservationBtn.addEventListener('click', () => {
-            this.displayMessage('Fonctionnalité à venir', 'info');
+            window.location.href = '/app-gestion-parking/reservation';
         });
     }
 
