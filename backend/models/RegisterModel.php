@@ -39,7 +39,8 @@ class RegisterModel {
             ]);
 
             return [
-                'success' => true
+                'success' => true,
+                'user_id' => $this->conn->lastInsertId()
             ];
 
         } catch (PDOException $e) {

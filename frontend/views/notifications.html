@@ -1,57 +1,37 @@
-<div class="container mt-4">
-    <div class="row justify-content-center">
-        <div class="col-12 col-lg-8">
+<div class="container">
+    <div class="row justify-content-center my-5">
+        <div class="col-12">
             <div class="header-section mb-4">
                 <h2 class="text-center position-relative">
                     <span class="notification-badge" id="notificationCount"></span>
-                    Mes Notifications
+                    Mes notifications
                 </h2>
-                <div class="text-center mt-3">
-                    <button class="btn btn-light rounded-pill px-4" id="markAllRead">
-                        <i class="bi bi-check2-all"></i> Tout marquer comme lu
-                    </button>
-                </div>
+                <p class="text-center text-muted">Restez informé de vos activités de stationnement</p>
             </div>
 
-            <div class="filters-section mb-4">
-                <div class="d-flex justify-content-center gap-2">
-                    <button class="btn btn-outline-primary rounded-pill active" data-filter="all">Toutes</button>
-                    <button class="btn btn-outline-primary rounded-pill" data-filter="unread">Non lues</button>
-                    <button class="btn btn-outline-primary rounded-pill" data-filter="reservations">Réservations</button>
-                    <button class="btn btn-outline-primary rounded-pill" data-filter="system">Système</button>
-                </div>
-            </div>
+            <div class="card border-0 shadow-lg">
+                <div class="card-body p-4">
+                    <div class="text-center mb-4">
+                        <button class="btn btn-light rounded-pill px-4" id="markAllRead">
+                            <i class="bi bi-check2-all"></i> Tout marquer comme lu
+                        </button>
+                    </div>
 
-            <div id="notificationsList" class="notifications-container">
-                <div id="noNotifications" class="empty-state">
-                    <div class="text-center py-5">
-                        <div class="empty-icon">
-                            <i class="bi bi-bell-slash"></i>
-                        </div>
-                        <h5 class="mt-4">Tout est à jour !</h5>
-                        <p class="text-muted">Vous n'avez aucune notification en attente</p>
+                    <div id="notificationsList" class="notifications-list">
+                        <!-- Contenu dynamique -->
                     </div>
                 </div>
             </div>
-
-            <nav class="mt-4">
-                <ul class="pagination justify-content-center" id="notificationsPagination"></ul>
-            </nav>
         </div>
     </div>
 </div>
 
 <style>
-    .header-section {
-        position: relative;
-        padding: 2rem 0;
-    }
-
     .notification-badge {
         position: absolute;
         top: -10px;
         right: -15px;
-        background: #ff4757;
+        background: #dc3545;
         color: white;
         border-radius: 50%;
         padding: 0.2rem 0.6rem;
@@ -59,27 +39,15 @@
         display: none;
     }
 
-    .filters-section .btn {
-        font-size: 0.9rem;
-        padding: 0.4rem 1.2rem;
-    }
-
-    .filters-section .btn.active {
-        background-color: #4834d4;
-        color: white;
-        border-color: #4834d4;
-    }
-
-    .notifications-container {
-        background: #fff;
-        border-radius: 15px;
-        box-shadow: 0 2px 20px rgba(0, 0, 0, 0.05);
+    .notifications-list {
+        max-height: 600px;
+        overflow-y: auto;
     }
 
     .notification-item {
-        padding: 1.5rem;
+        padding: 1rem;
         border-bottom: 1px solid #eee;
-        transition: all 0.3s ease;
+        transition: background-color 0.3s;
     }
 
     .notification-item:last-child {
@@ -87,99 +55,18 @@
     }
 
     .notification-item:hover {
-        background-color: #f8f9ff;
-    }
-
-    .notification-content {
-        position: relative;
-        padding-left: 1.5rem;
+        background-color: rgba(13, 110, 253, 0.05);
     }
 
     .notification-dot {
-        position: absolute;
-        left: 0;
-        top: 0.5rem;
         width: 8px;
         height: 8px;
-        background: #4834d4;
         border-radius: 50%;
+        display: inline-block;
+        margin-right: 1rem;
     }
 
     .notification-item.read .notification-dot {
         display: none;
-    }
-
-    .notification-body {
-        color: #2d3436;
-    }
-
-    .notification-title {
-        font-weight: 600;
-        margin-bottom: 0.5rem;
-    }
-
-    .notification-message {
-        color: #636e72;
-        font-size: 0.95rem;
-        margin-bottom: 0.75rem;
-    }
-
-    .notification-meta {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        font-size: 0.85rem;
-        color: #b2bec3;
-    }
-
-    .notification-time i {
-        font-size: 0.8rem;
-        margin-right: 0.3rem;
-    }
-
-    .notification-actions {
-        display: flex;
-        gap: 0.5rem;
-    }
-
-    .action-btn {
-        background: none;
-        border: none;
-        padding: 0.3rem;
-        color: #b2bec3;
-        transition: all 0.2s ease;
-    }
-
-    .action-btn:hover {
-        color: #4834d4;
-        transform: scale(1.1);
-    }
-
-    .action-btn.delete-notification:hover {
-        color: #ff4757;
-    }
-
-    .empty-state {
-        padding: 3rem;
-    }
-
-    .empty-icon {
-        font-size: 3rem;
-        color: #dfe6e9;
-    }
-
-    .pagination {
-        margin-top: 2rem;
-    }
-
-    .pagination .page-link {
-        border-radius: 50%;
-        margin: 0 0.3rem;
-        border: none;
-        color: #4834d4;
-    }
-
-    .pagination .page-item.active .page-link {
-        background-color: #4834d4;
     }
 </style>

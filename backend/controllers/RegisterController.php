@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../models/RegisterModel.php';
+require_once __DIR__ . '/NotificationController.php';
 
 class RegisterController {
     private $registerModel;
@@ -30,6 +31,12 @@ class RegisterController {
             $data['phone'],
             $data['password']
         );
+
+        if ($result['success']) {
+            $notificationController = new NotificationController();
+            $message = "Bienvenue, {$data['name']} ! Votre compte a été créé avec succès.";
+            $notificationController->createNotification($result['user_id'], $message);
+        }
 
         echo json_encode($result);
     }

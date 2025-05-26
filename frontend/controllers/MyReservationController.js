@@ -74,7 +74,6 @@ class MyReservationController {
                 const reservationId = row.dataset.reservationId;
                 if (reservationId) {
                     window.location.href = `/app-gestion-parking/paiement?id=${reservationId}`;
-                    // Notez que j'ai retiré le .html
                 }
             });
         }
@@ -85,19 +84,19 @@ class MyReservationController {
 
         if (reservation.status === 'attente') {
             buttons.push(`
-                <a href="/app-gestion-parking/paiement?id=${reservation.id}"
-                   class="btn btn-primary btn-sm me-2">
-                    <i class="bi bi-credit-card"></i> Payer
-                </a>`
+            <a href="/app-gestion-parking/paiement?id=${reservation.id}"
+               class="btn btn-primary btn-sm me-2">
+                <i class="bi bi-credit-card"></i> Payer
+            </a>`
             );
         }
 
-        if (reservation.status === 'reserver') {
+        if (reservation.status === 'attente' || reservation.status === 'reserver') {
             buttons.push(`
-                <button class="btn btn-danger btn-sm"
-                        onclick="event.stopPropagation(); myReservationController.cancelReservation(${reservation.id})">
-                    <i class="bi bi-x-circle"></i> Annuler
-                </button>`
+            <button class="btn btn-danger btn-sm"
+                    onclick="event.stopPropagation(); myReservationController.cancelReservation(${reservation.id})">
+                <i class="bi bi-x-circle"></i> Annuler
+            </button>`
             );
         }
 

@@ -1,5 +1,6 @@
 <?php
 
+require_once __DIR__ . '/NotificationController.php';
 require_once __DIR__ . '/../models/ReservationModel.php';
 
 class ReservationController
@@ -64,6 +65,10 @@ class ReservationController
         );
 
         if ($success) {
+            $notificationController = new NotificationController();
+            $message = "Nouvelle réservation pour la place n°{$data['parking_id']} du {$data['start_date']} au {$data['end_date']}";
+            $notificationController->createNotification($userId, $message);
+
             $reservationId = $this->reservationModel->getLastInsertId();
             http_response_code(201);
             echo json_encode([
@@ -89,7 +94,6 @@ class ReservationController
         }
 
         $data = json_decode(file_get_contents('php://input'), true);
-        // Correction ici : utiliser $_SESSION['user']['id'] au lieu de $_SESSION['user_id']
         $userId = $_SESSION['user']['id'] ?? null;
 
         if (!$userId) {
@@ -110,6 +114,10 @@ class ReservationController
         );
 
         if ($success) {
+            $notificationController = new NotificationController();
+            $message = "Votre réservation n°{$data['reservation_id']} a été annulée avec succès.";
+            $notificationController->createNotification($userId, $message);
+
             echo json_encode([
                 'success' => true,
                 'message' => 'Réservation annulée avec succès'
@@ -200,7 +208,6 @@ class ReservationController
     {
         $validTypes = ['voiture', 'moto', 'electrique'];
 
-        // Vérifie si toutes les données requises sont présentes
         if (!isset($data['parking_id']) ||
             !isset($data['vehicle_type']) ||  // Changé de 'type' à 'vehicle_type'
             !isset($data['price']) ||

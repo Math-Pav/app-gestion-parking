@@ -7,7 +7,7 @@ require_once __DIR__ . '/backend/controllers/LoginController.php';
 require_once __DIR__ . '/backend/controllers/RegisterController.php';
 require_once __DIR__ . '/backend/controllers/UserController.php';
 require_once __DIR__ . '/backend/controllers/ReservationController.php';
-
+require_once __DIR__ . '/backend/controllers/NotificationController.php';
 
 define('BASE_PATH', '/app-gestion-parking');
 
@@ -110,7 +110,16 @@ if (strpos($path, '/api/') === 0) {
     }  elseif ($path === '/api/reservations/user-reservations') {
         $controller = new ReservationController();
         $controller->getUserReservations();
-    }  elseif ($path === '/api/reservations/get-reservation') {
+    } elseif ($path === '/api/notifications') {
+        $controller = new NotificationController();
+        $controller->getNotifications();
+    } elseif ($path === '/api/notifications/mark-all-read') {
+        $controller = new NotificationController();
+        $controller->markAllAsRead();
+    } elseif ($path === '/api/notifications/mark-as-read') {
+        $controller = new NotificationController();
+        $controller->markAsRead();
+    } elseif ($path === '/api/reservations/get-reservation') {
         $controller = new ReservationController();
         $controller->getReservationById();
     }  else {
