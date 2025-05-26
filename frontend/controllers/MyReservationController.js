@@ -31,11 +31,11 @@ class MyReservationController {
     displayReservations(reservations) {
         if (!reservations || reservations.length === 0) {
             this.elements.tableBody.innerHTML = `
-            <tr>
-                <td colspan="8" class="text-center">
-                    Aucune réservation trouvée
-                </td>
-            </tr>`;
+        <tr>
+            <td colspan="8" class="text-center">
+                Aucune réservation trouvée
+            </td>
+        </tr>`;
             return;
         }
 
@@ -44,26 +44,23 @@ class MyReservationController {
             const endDate = new Date(reservation.end_date).toLocaleString('fr-FR');
 
             return `
-            <tr data-reservation-id="${reservation.id}">
-                <td>Place ${reservation.number_place}</td>
-                <td>${this.formatVehicleType(reservation.type_place)}</td>
-                <td>${startDate}</td>
-                <td>${endDate}</td>
-                <td>${reservation.duration}h</td>
-                <td>${reservation.price}€</td>
-                <td>
-                    <span class="badge bg-${this.getStatusColor(reservation.status)}">
-                        ${this.formatStatus(reservation.status)}
-                    </span>
-                </td>
-                <td class="text-center">
-                    ${this.getActionButtons(reservation)}
-                </td>
-            </tr>`;
+        <tr>
+            <td>Place ${reservation.number_place}</td>
+            <td>${this.formatVehicleType(reservation.type_place)}</td>
+            <td>${startDate}</td>
+            <td>${endDate}</td>
+            <td>${reservation.duration}h</td>
+            <td>${reservation.price}€</td>
+            <td>
+                <span class="badge bg-${this.getStatusColor(reservation.status)}">
+                    ${this.formatStatus(reservation.status)}
+                </span>
+            </td>
+            <td class="text-center">
+                ${this.getActionButtons(reservation)}
+            </td>
+        </tr>`;
         }).join('');
-
-        // Ajout des écouteurs d'événements pour les lignes du tableau
-        this.attachRowClickHandlers();
     }
 
     attachRowClickHandlers() {
