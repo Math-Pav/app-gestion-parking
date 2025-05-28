@@ -30,17 +30,17 @@ class NotificationModel {
     public function getNotificationsByUserId($userId) {
         try {
             $sql = "
-                SELECT
-                    id,
-                    message,
-                    DATE_FORMAT(send_date, '%d/%m/%Y %H:%i') as formatted_date,
-                    send_date as created_at,
-                    status,
-                    CASE WHEN status = 'supprimer' THEN 1 ELSE 0 END as `read`
-                FROM notifications
-                WHERE user_id = :userId AND status = 'en_cours'
-                ORDER BY send_date DESC
-            ";
+            SELECT
+                id,
+                message,
+                DATE_FORMAT(send_date, '%d/%m/%Y %H:%i') as formatted_date,
+                send_date as created_at,
+                status,
+                CASE WHEN status = 'lu' THEN 1 ELSE 0 END as `read`
+            FROM notifications
+            WHERE user_id = :userId AND status != 'supprimer'
+            ORDER BY send_date DESC
+        ";
             $stmt = $this->conn->prepare($sql);
             $stmt->execute(['userId' => $userId]);
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -72,7 +72,7 @@ class NotificationModel {
 
     public function markAsRead($notificationId, $userId) {
         try {
-            $sql = "UPDATE notifications SET status = 'supprimer' WHERE id = :notificationId AND user_id = :userId";
+            $sql = "UPDATE notifications SET status = 'lu' WHERE id = :notificationId AND user_id = :userId";
             $stmt = $this->conn->prepare($sql);
             return $stmt->execute([
                 'notificationId' => $notificationId,

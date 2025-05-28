@@ -72,8 +72,9 @@ class NotificationsController {
     }
 
     async markAsRead(event) {
-        const notificationItem = event.target.closest('.notification-item');
-        const notificationId = notificationItem.getAttribute('data-id');
+        const button = event.target.closest('.mark-as-read');
+        const notificationItem = button.closest('.notification-item');
+        const notificationId = notificationItem.dataset.id;
 
         try {
             const response = await fetch(`${this.baseUrl}/notifications/mark-as-read`, {
@@ -86,15 +87,19 @@ class NotificationsController {
 
             if (response.ok) {
                 notificationItem.classList.add('read');
-                notificationItem.querySelector('.notification-dot').style.backgroundColor = 'transparent';
-                this.updateNotificationCount(
-                    parseInt(this.elements.notificationCount.textContent, 10) - 1
-                );
+                const dot = notificationItem.querySelector('.notification-dot');
+                if (dot) {
+                    dot.style.backgroundColor = 'transparent';
+                }
+                button.style.display = 'none';
+
+                const count = parseInt(this.elements.notificationCount.textContent, 10);
+                this.updateNotificationCount(Math.max(0, count - 1));
             } else {
                 console.error('Erreur lors du marquage de la notification comme lue');
             }
         } catch (error) {
-            console.error('Erreur réseau :', error);
+            console.error('Erreur réseau:', error);
         }
     }
 

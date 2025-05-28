@@ -33,6 +33,11 @@ $name = isset($_SESSION['user']['name']) && !empty($_SESSION['user']['name'])
                         <i class="bi bi-bookmark me-1"></i>Mes réservations
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="<?php echo BASE_PATH; ?>/list">
+                        <i class="bi bi-bookmark me-1"></i>Liste des utilisateurs
+                    </a>
+                </li>
             </ul>
             <ul class="navbar-nav">
                 <li class="nav-item dropdown">

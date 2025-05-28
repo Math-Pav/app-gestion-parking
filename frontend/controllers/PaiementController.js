@@ -1,14 +1,14 @@
 class PaiementController {
     constructor() {
-        console.log('Initialisation du contrôleur de paiement'); // Debug
+        console.log('Initialisation du contrôleur de paiement');
         this.urlParams = new URLSearchParams(window.location.search);
         this.reservationId = this.urlParams.get('id');
-        console.log('ID de réservation:', this.reservationId); // Debug
+        console.log('ID de réservation:', this.reservationId);
 
         if (this.reservationId) {
             this.loadReservationById();
         } else {
-            console.log('Pas d\'ID de réservation, redirection...'); // Debug
+            console.log('Pas d\'ID de réservation, redirection...');
             window.location.href = '/app-gestion-parking/mes-reservations';
         }
 
@@ -16,11 +16,11 @@ class PaiementController {
     }
 
     loadReservationById() {
-        console.log('Chargement de la réservation...'); // Debug
+        console.log('Chargement de la réservation...');
         fetch(`/app-gestion-parking/api/reservations/get-reservation?id=${this.reservationId}`)
             .then(response => response.json())
             .then(data => {
-                console.log('Données reçues:', data); // Debug
+                console.log('Données reçues:', data);
                 if (data.success && data.reservation) {
                     this.displayReservationDetails(data.reservation);
                 } else {
@@ -35,7 +35,7 @@ class PaiementController {
     }
 
     displayReservationDetails(reservation) {
-        console.log('Affichage des détails...'); // Debug
+        console.log('Affichage des détails...');
         const elements = {
             'placeNumber': `Place ${reservation.place_number}`,
             'placeType': this.formatVehicleType(reservation.type),
@@ -50,7 +50,7 @@ class PaiementController {
             if (element) {
                 element.textContent = value;
             } else {
-                console.error(`Élément non trouvé: ${id}`); // Debug
+                console.error(`Élément non trouvé: ${id}`);
             }
         });
     }
@@ -65,17 +65,17 @@ class PaiementController {
     }
 
     initializeEventListeners() {
-        console.log('Initialisation des écouteurs d\'événements...'); // Debug
+        console.log('Initialisation des écouteurs d\'événements...');
         const cancelButton = document.getElementById('cancelReservation');
-        console.log('Bouton d\'annulation trouvé:', cancelButton); // Debug
+        console.log('Bouton d\'annulation trouvé:', cancelButton);
 
         if (cancelButton) {
             cancelButton.addEventListener('click', () => {
-                console.log('Clic sur le bouton d\'annulation'); // Debug
+                console.log('Clic sur le bouton d\'annulation');
                 this.handleCancelReservation();
             });
         } else {
-            console.error('Bouton d\'annulation non trouvé'); // Debug
+            console.error('Bouton d\'annulation non trouvé');
         }
     }
 
@@ -118,13 +118,12 @@ class PaiementController {
     }
 
     showError(message) {
-        console.error('Affichage erreur:', message); // Debug
+        console.error('Affichage erreur:', message);
         alert(message);
     }
 }
 
-// Initialisation du contrôleur
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('DOM chargé, initialisation du contrôleur...'); // Debug
+    console.log('DOM chargé, initialisation du contrôleur...');
     new PaiementController();
 });

@@ -8,6 +8,7 @@ require_once __DIR__ . '/backend/controllers/RegisterController.php';
 require_once __DIR__ . '/backend/controllers/UserController.php';
 require_once __DIR__ . '/backend/controllers/ReservationController.php';
 require_once __DIR__ . '/backend/controllers/NotificationController.php';
+require_once __DIR__ . '/backend/controllers/ListController.php';
 
 define('BASE_PATH', '/app-gestion-parking');
 
@@ -44,6 +45,11 @@ $routes = [
         'view' => 'frontend/views/reservation.html',
         'auth' => true,
         'js' => ['frontend/controllers/ReservationController.js']
+    ],
+    '/list' => [
+        'view' => 'frontend/views/list.html',
+        'auth' => true,
+        'js' => ['frontend/controllers/ListController.js']
     ],
     '/paiement' => [
         'view' => 'frontend/views/paiement.html',
@@ -116,9 +122,24 @@ if (strpos($path, '/api/') === 0) {
     } elseif ($path === '/api/notifications/mark-all-read') {
         $controller = new NotificationController();
         $controller->markAllAsRead();
-    } elseif ($path === '/api/notifications/mark-as-read') {
-        $controller = new NotificationController();
-        $controller->markAsRead();
+    } elseif ($path === '/api/notifications/mark-as-read' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+        $notificationController = new NotificationController();
+        $notificationController->markAsRead();
+    } elseif ($path === '/api/users/list') {
+        $controller = new ListController();
+        $controller->getUsers();
+    } elseif ($path === '/api/users/add') {
+        $controller = new ListController();
+        $controller->addUser();
+    } elseif ($path === '/api/users/update') {
+        $controller = new ListController();
+        $controller->updateUser();
+    } elseif ($path === '/api/users/delete') {
+        $controller = new ListController();
+        $controller->deleteUser();
+    } elseif ($path === '/api/users/get-user') {
+        $controller = new ListController();
+        $controller->getUserById();
     } elseif ($path === '/api/reservations/get-reservation') {
         $controller = new ReservationController();
         $controller->getReservationById();
