@@ -1,7 +1,4 @@
 <?php
-
-require_once dirname(__DIR__) . '/includes/Database.php';
-
 class LoginModel {
     private $db;
     private $conn;
@@ -22,7 +19,8 @@ class LoginModel {
 
     public function login($email, $password) {
         try {
-            $query = "SELECT id, email, password FROM user WHERE email = :email LIMIT 1";
+            // Ajout du rôle dans la requête
+            $query = "SELECT id, email, password, role FROM user WHERE email = :email AND status = 'active' LIMIT 1";
             $stmt = $this->conn->prepare($query);
             $stmt->execute(['email' => $email]);
 

@@ -12,10 +12,10 @@ document.addEventListener('DOMContentLoaded', function() {
         logoutBtn.addEventListener('click', async function(e) {
             e.preventDefault();
             try {
-                const response = await fetch('/projet_parking/api/logout');
+                const response = await fetch('/app-gestion-parking/api/logout');
                 const data = await response.json();
                 if (data.success) {
-                    window.location.href = '/projet_parking/';
+                    window.location.href = '/app-gestion-parking/';
                 }
             } catch (error) {
                 console.error('Erreur lors de la déconnexion:', error);

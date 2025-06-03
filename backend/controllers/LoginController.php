@@ -1,5 +1,4 @@
 <?php
-
 require_once __DIR__ . '/../models/LoginModel.php';
 
 class LoginController {
@@ -50,6 +49,13 @@ class LoginController {
                 session_regenerate_id(true);
                 $_SESSION['user'] = $result['user'];
                 $_SESSION['last_activity'] = time();
+
+                $redirectUrl = '/app-gestion-parking/dashboard';
+                if ($result['user']['role'] === 'admin') {
+                    $redirectUrl = '/app-gestion-parking/list';
+                }
+
+                $result['redirect'] = $redirectUrl;
             }
 
             echo json_encode($result);

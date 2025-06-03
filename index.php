@@ -9,6 +9,7 @@ require_once __DIR__ . '/backend/controllers/UserController.php';
 require_once __DIR__ . '/backend/controllers/ReservationController.php';
 require_once __DIR__ . '/backend/controllers/NotificationController.php';
 require_once __DIR__ . '/backend/controllers/ListController.php';
+require_once __DIR__ . '/backend/controllers/ListReservationController.php';
 
 define('BASE_PATH', '/app-gestion-parking');
 
@@ -34,42 +35,56 @@ $routes = [
     '/dashboard' => [
         'view' => 'frontend/views/dashboard.html',
         'auth' => true,
-        'js' => ['frontend/controllers/DashboardController.js']
+        'js' => ['frontend/controllers/DashboardController.js'],
+        'roles' => ['admin', 'user']
     ],
     '/register' => [
         'view' => 'frontend/views/register.html',
         'auth' => false,
+        'roles' => ['user'],
         'js' => ['frontend/controllers/RegisterController.js']
+    ],
+    '/list-reservation' => [
+        'view' => 'frontend/views/list-reservation.html',
+        'auth' => true,
+        'js' => ['frontend/controllers/ListReservationController.js'],
+        'roles' => ['admin', 'user']
     ],
     '/reservation' => [
         'view' => 'frontend/views/reservation.html',
         'auth' => true,
-        'js' => ['frontend/controllers/ReservationController.js']
+        'js' => ['frontend/controllers/ReservationController.js'],
+        'roles' => ['user']
     ],
     '/list' => [
         'view' => 'frontend/views/list.html',
         'auth' => true,
-        'js' => ['frontend/controllers/ListController.js']
+        'js' => ['frontend/controllers/ListController.js'],
+        'roles' => ['admin', 'user']
     ],
     '/paiement' => [
         'view' => 'frontend/views/paiement.html',
         'auth' => true,
-        'js' => ['frontend/controllers/PaiementController.js']
+        'js' => ['frontend/controllers/PaiementController.js'],
+        'roles' => ['user']
     ],
     '/notifications' => [
         'view' => 'frontend/views/notifications.html',
         'auth' => true,
-        'js' => ['frontend/controllers/NotificationsController.js']
+        'js' => ['frontend/controllers/NotificationsController.js'],
+        'roles' => ['user']
     ],
     '/profile' => [
         'view' => 'frontend/views/profile.html',
         'auth' => true,
-        'js' => ['frontend/controllers/ProfileController.js']
+        'js' => ['frontend/controllers/ProfileController.js'],
+        'roles' => ['user','admin']
     ],
     '/mes-reservations' => [
         'view' => 'frontend/views/my-reservation.html',
         'auth' => true,
-        'js' => ['frontend/controllers/MyReservationController.js']
+        'js' => ['frontend/controllers/MyReservationController.js'],
+        'roles' => ['user']
     ]
 
 ];
@@ -125,6 +140,12 @@ if (strpos($path, '/api/') === 0) {
     } elseif ($path === '/api/notifications/mark-as-read' && $_SERVER['REQUEST_METHOD'] === 'POST') {
         $notificationController = new NotificationController();
         $notificationController->markAsRead();
+    } elseif ($path === '/api/reservations/list') {
+        $controller = new ListReservationController();
+        $controller->getUserReservations();
+    } elseif ($path === '/api/reservations/cancel') {
+        $controller = new ListReservationController();
+        $controller->cancelReservation();
     } elseif ($path === '/api/users/list') {
         $controller = new ListController();
         $controller->getUsers();
@@ -156,6 +177,12 @@ if (isset($routes[$path])) {
         exit;
     }
 
+    if (isset($routes[$path]['roles']) &&
+        !in_array($_SESSION['user']['role'], $routes[$path]['roles'])) {
+        header('Location: ' . BASE_PATH . '/dashboard');
+        exit;
+    }
+
     header('Content-Type: text/html; charset=utf-8');
     ?>
     <!DOCTYPE html>
@@ -183,6 +210,9 @@ if (isset($routes[$path])) {
     <?php if ($path !== '/'): ?>
         <script src="<?php echo BASE_PATH; ?>/frontend/assets/js/navbar.js" defer></script>
     <?php endif; ?>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     </body>
     </html>
     <?php

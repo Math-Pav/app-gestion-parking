@@ -1,61 +1,81 @@
 <?php
-$name = isset($_SESSION['user']['name']) && !empty($_SESSION['user']['name'])
-    ? htmlspecialchars($_SESSION['user']['name'])
-    : 'Utilisateur';
+$userRole = $_SESSION['user']['role'] ?? '';
+$currentPage = trim($_SERVER['REQUEST_URI'], '/');
+$currentPage = str_replace('app-gestion-parking/', '', $currentPage);
 ?>
-<nav class="navbar navbar-expand-lg custom-navbar mb-4">
+
+<nav class="navbar navbar-expand-lg custom-navbar">
     <div class="container">
-        <a class="navbar-brand fw-bold" href="#">
+        <a class="navbar-brand" href="<?php echo BASE_PATH; ?>/dashboard">
             <i class="bi bi-p-circle-fill me-2"></i>Parking App
         </a>
-        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
+
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="<?php echo BASE_PATH; ?>/dashboard">
-                        <i class="bi bi-speedometer2 me-1"></i>Tableau de bord
+                    <a class="nav-link <?php echo $currentPage === 'dashboard' ? 'active' : ''; ?>"
+                       href="<?php echo BASE_PATH; ?>/dashboard">
+                        <i class="bi bi-speedometer2 me-2"></i>Dashboard
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="<?php echo BASE_PATH; ?>/reservation">
-                        <i class="bi bi-calendar-plus me-1"></i>Réserver
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="<?php echo BASE_PATH; ?>/notifications">
-                        <i class="bi bi-bell me-1"></i>Notifications
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="<?php echo BASE_PATH; ?>/mes-reservations">
-                        <i class="bi bi-bookmark me-1"></i>Mes réservations
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="<?php echo BASE_PATH; ?>/list">
-                        <i class="bi bi-bookmark me-1"></i>Liste des utilisateurs
-                    </a>
-                </li>
+
+                <?php if ($userRole === 'admin'): ?>
+                    <li class="nav-item">
+                        <a class="nav-link <?php echo $currentPage === 'list' ? 'active' : ''; ?>"
+                           href="<?php echo BASE_PATH; ?>/list">
+                            <i class="bi bi-people me-2"></i>Utilisateurs
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link <?php echo $currentPage === 'list-reservation' ? 'active' : ''; ?>"
+                           href="<?php echo BASE_PATH; ?>/list-reservation">
+                            <i class="bi bi-calendar-check me-2"></i>Réservations
+                        </a>
+                    </li>
+                <?php endif; ?>
+
+                <?php if ($userRole === 'user'): ?>
+                    <li class="nav-item">
+                        <a class="nav-link <?php echo $currentPage === 'reservation' ? 'active' : ''; ?>"
+                           href="<?php echo BASE_PATH; ?>/reservation">
+                            <i class="bi bi-calendar-plus me-2"></i>Réserver
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link <?php echo $currentPage === 'mes-reservations' ? 'active' : ''; ?>"
+                           href="<?php echo BASE_PATH; ?>/mes-reservations">
+                            <i class="bi bi-calendar-event me-2"></i>Mes réservations
+                        </a>
+                    </li>
+                <?php endif; ?>
             </ul>
+
             <ul class="navbar-nav">
+                <?php if ($userRole === 'user'): ?>
+                    <li class="nav-item">
+                        <a class="nav-link position-relative <?php echo $currentPage === 'notifications' ? 'active' : ''; ?>"
+                           href="<?php echo BASE_PATH; ?>/notifications">
+                            <i class="bi bi-bell me-2"></i>Notifications
+                            <span class="notification-badge" id="notificationBadge"></span>
+                        </a>
+                    </li>
+                <?php endif; ?>
+
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
-                        <div class="avatar-circle me-2">
-                            <i class="bi bi-person-circle"></i>
-                        </div>
-                        <span><?php echo $name; ?></span>
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                        <i class="bi bi-person-circle me-2"></i><?php echo $_SESSION['user']['name'] ?? 'Mon compte'; ?>
                     </a>
-                    <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0">
+                    <ul class="dropdown-menu dropdown-menu-end">
                         <li>
-                            <a class="dropdown-item py-2" href="<?php echo BASE_PATH; ?>/profile">
+                            <a class="dropdown-item" href="<?php echo BASE_PATH; ?>/profile">
                                 <i class="bi bi-person me-2"></i>Mon profil
                             </a>
                         </li>
-                        <li><hr class="dropdown-divider"></li>
                         <li>
-                            <a class="dropdown-item py-2 text-danger" href="#" id="logoutBtn">
+                            <a class="dropdown-item" href="#" id="logoutBtn">
                                 <i class="bi bi-box-arrow-right me-2"></i>Déconnexion
                             </a>
                         </li>
@@ -66,63 +86,4 @@ $name = isset($_SESSION['user']['name']) && !empty($_SESSION['user']['name'])
     </div>
 </nav>
 
-<style>
-    .custom-navbar {
-        background-color: #ffffff;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-        padding: 1rem 0;
-    }
-
-
-    .nav-link {
-        color: #495057;
-        padding: 0.5rem 1rem;
-        border-radius: 0.5rem;
-        transition: all 0.3s ease;
-    }
-
-    .avatar-circle {
-        width: 32px;
-        height: 32px;
-        background-color: rgba(13, 110, 253, 0.1);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .dropdown-menu {
-        border-radius: 0.5rem;
-        margin-top: 0.5rem;
-    }
-
-    .dropdown-item {
-        border-radius: 0.3rem;
-    }
-
-    .dropdown-item:hover {
-        background-color: rgba(13, 110, 253, 0.05);
-    }
-
-    .dropdown-item.text-danger:hover {
-        background-color: rgba(220, 53, 69, 0.05);
-    }
-
-    @media (max-width: 991.98px) {
-        .navbar-collapse {
-            padding: 1rem 0;
-        }
-
-        .nav-link {
-            padding: 0.75rem 1rem;
-        }
-
-        .dropdown-menu {
-            border: none;
-            box-shadow: none !important;
-            padding: 0;
-        }
-    }
-</style>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
