@@ -83,13 +83,6 @@ class ListReservationController {
         if (['reserver', 'en_cours', 'attente'].includes(reservation.status)) {
             return `
                 <button type="button"
-                        class="btn btn-warning btn-sm me-2"
-                        data-action="edit"
-                        data-reservation-id="${reservation.id}"
-                        onclick="listReservationController.handleEditReservation(${reservation.id})">
-                    <i class="bi bi-pencil-square me-1"></i>Modifier
-                </button>
-                <button type="button"
                         class="btn btn-danger btn-sm"
                         data-action="cancel"
                         data-reservation-id="${reservation.id}"
@@ -99,34 +92,6 @@ class ListReservationController {
         }
         return '';
     }
-
-    handleEditReservation(reservationId) {
-        fetch(`${this.api.baseUrl}/reservations/get-reservation?id=${reservationId}`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    this.populateEditForm(data.reservation);
-                    this.openModal('editReservationModal');
-                } else {
-                    this.showError(data.message);
-                }
-            })
-            .catch(error => this.showError('Erreur lors du chargement des données'));
-    }
-
-    populateEditForm(reservation) {
-        document.getElementById('editReservationId').value = reservation.id;
-        document.getElementById('editStartDate').value = reservation.start_date;
-        document.getElementById('editEndDate').value = reservation.end_date;
-        document.getElementById('editStartTime').value = reservation.start_time;
-        document.getElementById('editEndTime').value = reservation.end_time;
-    }
-
-    openModal(id) {
-        const modal = new bootstrap.Modal(document.getElementById(id));
-        modal.show();
-    }
-
     handleCancelReservation(reservationId) {
         if (!confirm('Voulez-vous vraiment annuler cette réservation ?')) {
             return;
@@ -135,9 +100,12 @@ class ListReservationController {
         fetch(`${this.api.baseUrl}/reservations/cancel`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
             },
-            body: JSON.stringify({ reservationId: reservationId })
+            body: JSON.stringify({
+                reservationId: parseInt(reservationId) // Assurez-vous que l'ID est un nombre
+            })
         })
             .then(response => response.json())
             .then(data => {
@@ -148,7 +116,10 @@ class ListReservationController {
                     this.showError(data.message || 'Erreur lors de l\'annulation');
                 }
             })
-            .catch(error => this.showError('Erreur lors de l\'annulation'));
+            .catch(error => {
+                console.error('Erreur:', error);
+                this.showError('Erreur lors de l\'annulation');
+            });
     }
 
     showError(message) {

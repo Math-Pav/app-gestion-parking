@@ -74,18 +74,6 @@ $currentPage = str_replace('app-gestion-parking/', '', $currentPage);
         outline: none;
     }
 
-    .notification-badge {
-        background: #ef4444;
-        color: white;
-        font-size: 0.65rem;
-        padding: 0.2rem 0.45rem;
-        border-radius: 20px;
-        position: absolute;
-        top: 2px;
-        right: 2px;
-        border: 2px solid #ffffff;
-    }
-
     .dropdown-menu {
         padding: 0.5rem;
         border: none;
@@ -146,12 +134,23 @@ $currentPage = str_replace('app-gestion-parking/', '', $currentPage);
 
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto">
-                <li class="nav-item">
-                    <a class="nav-link <?php echo $currentPage === 'dashboard' ? 'active' : ''; ?>"
-                       href="<?php echo BASE_PATH; ?>/dashboard">
-                        <i class="bi bi-speedometer2 me-2"></i>Dashboard
-                    </a>
-                </li>
+                <?php if ($userRole === 'admin'): ?>
+                    <li class="nav-item">
+                        <a class="nav-link <?php echo $currentPage === 'dashboard-admin' ? 'active' : ''; ?>"
+                           href="<?php echo BASE_PATH; ?>/dashboard-admin">
+                            <i class="bi bi-speedometer2 me-2"></i>Dashboard
+                        </a>
+                    </li>
+                <?php endif; ?>
+
+                <?php if ($userRole === 'user'): ?>
+                    <li class="nav-item">
+                        <a class="nav-link <?php echo $currentPage === 'dashboard' ? 'active' : ''; ?>"
+                           href="<?php echo BASE_PATH; ?>/dashboard">
+                            <i class="bi bi-speedometer2 me-2"></i>Dashboard
+                        </a>
+                    </li>
+                <?php endif; ?>
 
                 <?php if ($userRole === 'admin'): ?>
                     <li class="nav-item">
@@ -190,7 +189,6 @@ $currentPage = str_replace('app-gestion-parking/', '', $currentPage);
                         <a class="nav-link position-relative <?php echo $currentPage === 'notifications' ? 'active' : ''; ?>"
                            href="<?php echo BASE_PATH; ?>/notifications">
                             <i class="bi bi-bell me-2"></i>Notifications
-                            <span class="notification-badge" id="notificationBadge"></span>
                         </a>
                     </li>
                 <?php endif; ?>

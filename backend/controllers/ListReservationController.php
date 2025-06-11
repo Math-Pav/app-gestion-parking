@@ -46,8 +46,6 @@ class ListReservationController {
     public function cancelReservation() {
         header('Content-Type: application/json');
 
-        error_log('REQUEST_METHOD: ' . $_SERVER['REQUEST_METHOD']);
-
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             http_response_code(405);
             echo json_encode([
@@ -66,13 +64,9 @@ class ListReservationController {
             return;
         }
 
-        $rawData = file_get_contents('php://input');
-        error_log('Raw input: ' . $rawData);
+        $data = json_decode(file_get_contents('php://input'), true);
 
-        $data = json_decode($rawData, true);
-        error_log('Decoded data: ' . print_r($data, true));
-
-        if (!isset($data['reservationId']) || empty($data['reservationId'])) {
+        if (!isset($data['reservationId'])) {
             http_response_code(400);
             echo json_encode([
                 'success' => false,
@@ -83,13 +77,11 @@ class ListReservationController {
 
         try {
             $userId = $_SESSION['user']['id'];
-            error_log('User ID: ' . $userId);
-            error_log('Reservation ID: ' . $data['reservationId']);
+            $reservationId = intval($data['reservationId']);
 
-            $result = $this->model->cancelReservation($data['reservationId'], $userId);
+            $result = $this->model->cancelReservation($reservationId, $userId);
             echo json_encode($result);
         } catch (Exception $e) {
-            error_log('Error: ' . $e->getMessage());
             http_response_code(500);
             echo json_encode([
                 'success' => false,

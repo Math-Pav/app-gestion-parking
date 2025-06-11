@@ -10,6 +10,7 @@ require_once __DIR__ . '/backend/controllers/ReservationController.php';
 require_once __DIR__ . '/backend/controllers/NotificationController.php';
 require_once __DIR__ . '/backend/controllers/ListController.php';
 require_once __DIR__ . '/backend/controllers/ListReservationController.php';
+require_once __DIR__ . '/backend/controllers/DashboardAdminController.php';
 
 define('BASE_PATH', '/app-gestion-parking');
 
@@ -36,12 +37,11 @@ $routes = [
         'view' => 'frontend/views/dashboard.html',
         'auth' => true,
         'js' => ['frontend/controllers/DashboardController.js'],
-        'roles' => ['admin', 'user']
+        'roles' => ['user']
     ],
     '/register' => [
         'view' => 'frontend/views/register.html',
         'auth' => false,
-        'roles' => ['user'],
         'js' => ['frontend/controllers/RegisterController.js']
     ],
     '/list-reservation' => [
@@ -85,7 +85,13 @@ $routes = [
         'auth' => true,
         'js' => ['frontend/controllers/MyReservationController.js'],
         'roles' => ['user']
-    ]
+    ],
+    '/dashboard-admin' => [
+        'view' => 'frontend/views/dashboard-admin.html',
+        'auth' => true,
+        'js' => ['frontend/controllers/DashboardAdminController.js'],
+        'roles' => ['admin']
+    ],
 
 ];
 
@@ -125,9 +131,6 @@ if (strpos($path, '/api/') === 0) {
     }  elseif ($path === '/api/reservation/latest' && $_SERVER['REQUEST_METHOD'] === 'GET') {
         $reservationController = new ReservationController();
         $reservationController->getLatestReservation();
-    }  elseif ($path === '/api/reservations/cancel') {
-        $controller = new ReservationController();
-        $controller->cancelReservation();
     }  elseif ($path === '/api/reservations/user-reservations') {
         $controller = new ReservationController();
         $controller->getUserReservations();
@@ -161,6 +164,12 @@ if (strpos($path, '/api/') === 0) {
     } elseif ($path === '/api/users/get-user') {
         $controller = new ListController();
         $controller->getUserById();
+    } elseif ($path === '/api/admin/stats') {
+        $controller = new DashboardAdminController();
+        $controller->getStats();
+    } elseif ($path === '/api/admin/chart-data') {
+        $controller = new DashboardAdminController();
+        $controller->getChartData();
     } elseif ($path === '/api/reservations/get-reservation') {
         $controller = new ReservationController();
         $controller->getReservationById();
