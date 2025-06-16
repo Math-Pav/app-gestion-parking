@@ -11,6 +11,7 @@ require_once __DIR__ . '/backend/controllers/NotificationController.php';
 require_once __DIR__ . '/backend/controllers/ListController.php';
 require_once __DIR__ . '/backend/controllers/ListReservationController.php';
 require_once __DIR__ . '/backend/controllers/DashboardAdminController.php';
+require_once __DIR__ . '/backend/controllers/NextPaiementController.php';
 
 define('BASE_PATH', '/app-gestion-parking');
 
@@ -65,7 +66,7 @@ $routes = [
     '/paiement' => [
         'view' => 'frontend/views/paiement.html',
         'auth' => true,
-        'js' => ['frontend/controllers/PaiementController.js'],
+        'js' => ['frontend/controllers/PaiementController.js', 'frontend/controllers/NextPaiementController.js'],
         'roles' => ['user']
     ],
     '/notifications' => [
@@ -91,6 +92,12 @@ $routes = [
         'auth' => true,
         'js' => ['frontend/controllers/DashboardAdminController.js'],
         'roles' => ['admin']
+    ],
+    '/next-paiement' => [
+        'view' => 'frontend/views/next-paiement.html',
+        'auth' => true,
+        'js' => ['frontend/controllers/NextPaiementController.js'],
+        'roles' => ['user']
     ],
 
 ];
@@ -170,6 +177,9 @@ if (strpos($path, '/api/') === 0) {
     } elseif ($path === '/api/admin/chart-data') {
         $controller = new DashboardAdminController();
         $controller->getChartData();
+    } elseif ($path === '/api/payment/process') {
+        $controller = new NextPaiementController();
+        $controller->handlePayment();
     } elseif ($path === '/api/reservations/get-reservation') {
         $controller = new ReservationController();
         $controller->getReservationById();

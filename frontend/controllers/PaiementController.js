@@ -5,31 +5,43 @@ class PaiementController {
         this.reservationId = this.urlParams.get('id');
         console.log('ID de réservation:', this.reservationId);
 
-        if (this.reservationId) {
-            this.loadReservationById();
-        } else {
-            console.log('Pas d\'ID de réservation, redirection...');
+        if (!this.reservationId) {
+            console.error('ID de réservation manquant');
             window.location.href = '/app-gestion-parking/mes-reservations';
+            return;
         }
 
-        this.initializeEventListeners();
+        this.loadReservationById();
     }
 
     loadReservationById() {
         console.log('Chargement de la réservation...');
         fetch(`/app-gestion-parking/api/reservations/get-reservation?id=${this.reservationId}`)
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Erreur HTTP: ${response.status}`);
+                }
+                return response.text().then(text => {
+                    try {
+                        return JSON.parse(text);
+                    } catch (e) {
+                        console.error('Texte reçu:', text);
+                        throw new Error('Réponse invalide du serveur');
+                    }
+                });
+            })
             .then(data => {
                 console.log('Données reçues:', data);
                 if (data.success && data.reservation) {
                     this.displayReservationDetails(data.reservation);
+                    this.initializeEventListeners();
                 } else {
-                    console.error('Erreur:', data.message);
-                    window.location.href = '/app-gestion-parking/mes-reservations';
+                    throw new Error(data.message || 'Erreur de chargement');
                 }
             })
             .catch(error => {
                 console.error('Erreur:', error);
+                alert(error.message);
                 window.location.href = '/app-gestion-parking/mes-reservations';
             });
     }
@@ -62,21 +74,6 @@ class PaiementController {
             'voiture_electrique': 'Véhicule électrique'
         };
         return types[type] || type;
-    }
-
-    initializeEventListeners() {
-        console.log('Initialisation des écouteurs d\'événements...');
-        const cancelButton = document.getElementById('cancelReservation');
-        console.log('Bouton d\'annulation trouvé:', cancelButton);
-
-        if (cancelButton) {
-            cancelButton.addEventListener('click', () => {
-                console.log('Clic sur le bouton d\'annulation');
-                this.handleCancelReservation();
-            });
-        } else {
-            console.error('Bouton d\'annulation non trouvé');
-        }
     }
 
     handleCancelReservation() {
