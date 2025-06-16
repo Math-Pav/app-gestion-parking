@@ -50,10 +50,9 @@ class LoginController {
                 $_SESSION['user'] = $result['user'];
                 $_SESSION['last_activity'] = time();
 
-                $redirectUrl = '/app-gestion-parking/dashboard';
-                if ($result['user']['role'] === 'admin') {
-                    $redirectUrl = '/app-gestion-parking/list';
-                }
+                $redirectUrl = $result['user']['role'] === 'admin'
+                    ? '/app-gestion-parking/dashboard-admin'
+                    : '/app-gestion-parking/dashboard';
 
                 $result['redirect'] = $redirectUrl;
             }

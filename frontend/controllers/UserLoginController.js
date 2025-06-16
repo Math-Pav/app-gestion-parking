@@ -59,7 +59,7 @@ class UserLoginController {
     handleLoginResponse(data) {
         if (data.success) {
             this.displayMessage('Connexion réussie', 'success');
-            window.location.href = '/app-gestion-parking/dashboard';
+            window.location.href = data.redirect;
         } else {
             this.displayMessage(data.message, 'error');
         }

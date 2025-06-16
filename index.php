@@ -186,10 +186,14 @@ if (isset($routes[$path])) {
         exit;
     }
 
-    if (isset($routes[$path]['roles']) &&
-        !in_array($_SESSION['user']['role'], $routes[$path]['roles'])) {
-        header('Location: ' . BASE_PATH . '/dashboard');
-        exit;
+    if (isset($routes[$path]['roles']) && isset($_SESSION['user'])) {
+        if (!in_array($_SESSION['user']['role'], $routes[$path]['roles'])) {
+            $redirectPath = $_SESSION['user']['role'] === 'admin'
+                ? '/dashboard-admin'
+                : '/dashboard';
+            header('Location: ' . BASE_PATH . $redirectPath);
+            exit;
+        }
     }
 
     header('Content-Type: text/html; charset=utf-8');
