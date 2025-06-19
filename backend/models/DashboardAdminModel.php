@@ -32,4 +32,40 @@ class DashboardAdminModel {
         $stmt = $this->conn->query($query);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function getNumberOfUsers() {
+        try {
+            $query = "SELECT COUNT(id) as total FROM user WHERE status = 'active'";
+            $stmt = $this->conn->prepare($query);
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            return [
+                'success' => true,
+                'total' => $result['total']
+            ];
+        } catch (PDOException $e) {
+            error_log("Erreur SQL: " . $e->getMessage());
+            return [
+                'success' => false,
+                'message' => 'Erreur lors du comptage des utilisateurs'
+            ];
+        }
+    }
+
+    public function getNumberOfReservations() {
+        try {
+            $query = "SELECT COUNT(*) as total FROM reservations";
+            $stmt = $this->conn->query($query);
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            return [
+                'success' => true,
+                'total' => $result['total']
+            ];
+        } catch (PDOException $e) {
+            return [
+                'success' => false,
+                'message' => 'Erreur lors du comptage des réservations'
+            ];
+        }
+    }
 }
