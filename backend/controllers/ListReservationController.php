@@ -21,18 +21,8 @@ class ListReservationController {
     public function getUserReservations() {
         header('Content-Type: application/json');
 
-        if (!$this->checkAuth()) {
-            http_response_code(401);
-            echo json_encode([
-                'success' => false,
-                'message' => 'Non autorisé'
-            ]);
-            return;
-        }
-
         try {
-            $userId = $_SESSION['user']['id'];
-            $result = $this->model->getUserReservations($userId);
+            $result = $this->model->getUserReservations(null);
             echo json_encode($result);
         } catch (Exception $e) {
             http_response_code(500);

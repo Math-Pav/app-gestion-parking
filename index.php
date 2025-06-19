@@ -171,9 +171,6 @@ if (strpos($path, '/api/') === 0) {
     } elseif ($path === '/api/users/get-user') {
         $controller = new ListController();
         $controller->getUserById();
-    } elseif ($path === '/api/admin/stats') {
-        $controller = new DashboardAdminController();
-        $controller->getStats();
     } elseif ($path === '/api/admin/chart-data') {
         $controller = new DashboardAdminController();
         $controller->getChartData();

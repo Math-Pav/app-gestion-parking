@@ -104,7 +104,7 @@ class ListReservationController {
                 'Accept': 'application/json'
             },
             body: JSON.stringify({
-                reservationId: parseInt(reservationId) // Assurez-vous que l'ID est un nombre
+                reservationId: parseInt(reservationId)
             })
         })
             .then(response => response.json())

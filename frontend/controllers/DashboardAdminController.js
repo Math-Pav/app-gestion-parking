@@ -46,23 +46,11 @@ class DashboardAdminController {
     async loadData() {
         try {
             await Promise.all([
-                this.loadStats(),
                 this.loadChartData()
             ]);
         } catch (error) {
             console.error('Erreur:', error);
             this.showError('Erreur lors du chargement des données');
-        }
-    }
-
-    async loadStats() {
-        const response = await fetch(`${this.BASE_PATH}/api/admin/stats`);
-        const data = await response.json();
-
-        if (data.success) {
-            this.updateStats(data.data);
-        } else {
-            console.error('Erreur API:', data.message);
         }
     }
 
@@ -75,12 +63,6 @@ class DashboardAdminController {
         } else {
             console.error('Erreur API:', data.message);
         }
-    }
-
-    updateStats(stats) {
-        document.getElementById('totalReservations').textContent = stats.totalReservations || '0';
-        document.getElementById('availableSpots').textContent = stats.availableSpots || '0';
-        document.getElementById('activeUsers').textContent = stats.activeUsers || '0';
     }
 
     showError(message) {

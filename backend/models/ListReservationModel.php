@@ -10,21 +10,25 @@ class ListReservationModel {
     }
 
     public function getUserReservations($userId) {
-        $query = "SELECT r.*, 
-                  p.number_place, 
-                  p.type_place,
-                  DATE_FORMAT(r.start_date, '%d/%m/%Y') as formatted_date,
-                  DATE_FORMAT(r.end_date, '%d/%m/%Y') as formatted_end_date,
-                  DATE_FORMAT(r.start_date, '%H:%i') as start_time,
-                  DATE_FORMAT(r.end_date, '%H:%i') as end_time
-                  FROM reservations r
-                  JOIN parking p ON r.parking_id = p.id
-                  WHERE r.user_id = ?
-                  ORDER BY r.start_date DESC";
+        $query = "SELECT r.id,
+              r.user_id,
+              r.start_date,
+              r.end_date,
+              r.price,
+              r.status,
+              p.number_place,
+              p.type_place,
+              DATE_FORMAT(r.start_date, '%d/%m/%Y') as formatted_date,
+              DATE_FORMAT(r.end_date, '%d/%m/%Y') as formatted_end_date,
+              DATE_FORMAT(r.start_date, '%H:%i') as start_time,
+              DATE_FORMAT(r.end_date, '%H:%i') as end_time
+              FROM reservations r
+              JOIN parking p ON r.parking_id = p.id
+              ORDER BY r.start_date DESC";
 
         try {
             $stmt = $this->conn->prepare($query);
-            $stmt->execute([$userId]);
+            $stmt->execute();
 
             return [
                 'success' => true,
