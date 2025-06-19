@@ -111,22 +111,22 @@ class ReservationController {
             this.elements.recapPrix.textContent = `${price.toFixed(2)}€`;
         }
     }
+    calculatePrice(duration, type) {
+        const hourlyRates = {
+            'moto': 2,
+            'voiture': 3,
+            'electrique': 4,
+            'handicap': 3
+        };
+        const hours = parseInt(duration.match(/\d+/)[0]);
+        return hours * (hourlyRates[type]);
+    }
 
     calculateDuration(start, end) {
         const startDate = new Date(start);
         const endDate = new Date(end);
         const hours = Math.ceil((endDate - startDate) / (1000 * 60 * 60));
         return `${hours} heure(s)`;
-    }
-
-    calculatePrice(duration, type) {
-        const hourlyRates = {
-            'moto': 2,
-            'voiture': 3,
-            'electrique': 4
-        };
-        const hours = parseInt(duration);
-        return hours * (hourlyRates[type] || 0);
     }
 
     async handleSubmit(e) {
@@ -138,7 +138,7 @@ class ReservationController {
             vehicle_type: document.querySelector('input[name="vehicleType"]:checked')?.value,
             start_date: this.elements.startDateTime.value,
             end_date: this.elements.endDateTime.value,
-            price: parseFloat(this.elements.recapPrix.textContent)
+            price: parseFloat(this.elements.recapPrix.textContent.replace('€', ''))
         };
 
         try {

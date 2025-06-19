@@ -206,17 +206,17 @@ class ReservationController
 
     private function validateReservationData($data)
     {
-        $validTypes = ['voiture', 'moto', 'electrique'];
+        $validTypes = ['voiture', 'moto', 'electrique','handicap'];
 
         if (!isset($data['parking_id']) ||
-            !isset($data['vehicle_type']) ||  // Changé de 'type' à 'vehicle_type'
+            !isset($data['vehicle_type']) ||
             !isset($data['price']) ||
             !isset($data['start_date']) ||
             !isset($data['end_date'])) {
             return false;
         }
 
-        if (!in_array($data['vehicle_type'], $validTypes)) {  // Changé de 'type' à 'vehicle_type'
+        if (!in_array($data['vehicle_type'], $validTypes)) {
             return false;
         }
 

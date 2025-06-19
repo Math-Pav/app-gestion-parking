@@ -33,7 +33,8 @@ class ReservationModel {
         $typeMapping = [
             'voiture' => 'voiture',
             'moto' => 'moto',
-            'electrique' => 'voiture_electrique'
+            'electrique' => 'electrique',
+            'handicap' => 'handicape',
         ];
 
         $placeType = $typeMapping[$type] ?? $type;
@@ -180,5 +181,9 @@ class ReservationModel {
         $stmt = $this->conn->prepare($query);
         $stmt->execute([$userId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getLastInsertId() {
+        return $this->conn->lastInsertId();
     }
 }
