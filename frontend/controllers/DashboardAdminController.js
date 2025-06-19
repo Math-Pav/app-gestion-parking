@@ -51,7 +51,6 @@ class DashboardAdminController {
             ]);
         } catch (error) {
             console.error('Erreur:', error);
-            // Gérer l'erreur visuellement
             this.showError('Erreur lors du chargement des données');
         }
     }
@@ -82,7 +81,13 @@ class DashboardAdminController {
         document.getElementById('totalReservations').textContent = stats.totalReservations || '0';
         document.getElementById('availableSpots').textContent = stats.availableSpots || '0';
         document.getElementById('activeUsers').textContent = stats.activeUsers || '0';
-        document.getElementById('pendingReservations').textContent = stats.pendingReservations || '0';
+    }
+
+    showError(message) {
+        const stats = ['totalReservations', 'availableSpots', 'activeUsers'];
+        stats.forEach(id => {
+            document.getElementById(id).textContent = '-';
+        });
     }
 
     updateChart(data) {
@@ -91,13 +96,6 @@ class DashboardAdminController {
             this.parkingTypesChart.data.datasets[0].data = data.types.map(item => item.count);
             this.parkingTypesChart.update();
         }
-    }
-
-    showError(message) {
-        const stats = ['totalReservations', 'availableSpots', 'activeUsers', 'pendingReservations'];
-        stats.forEach(id => {
-            document.getElementById(id).textContent = '-';
-        });
     }
 
     startAutoRefresh() {

@@ -1,62 +1,86 @@
 <?php
 require_once __DIR__ . '/../includes/Database.php';
-
 class DashboardAdminModel {
     private $conn;
 
     public function __construct() {
-        $database = new Database();
-        $this->conn = $database->connect();
+        try {
+            $database = new Database();
+            $this->conn = $database->connect();
+        } catch (Exception $e) {
+            error_log($e->getMessage());
+            throw $e;
+        }
     }
 
     public function getGeneralStats() {
         try {
+            error_log("Début getGeneralStats");
             $stats = [
                 'totalReservations' => $this->getTotalReservations(),
                 'availableSpots' => $this->getAvailableSpots(),
-                'activeUsers' => $this->getActiveUsers(),
-                'pendingReservations' => $this->getPendingReservations()
+                'activeUsers' => $this->getActiveUsers()
             ];
+            error_log("Stats récupérées : " . json_encode($stats));
             return $stats;
         } catch (PDOException $e) {
-            throw new Exception($e->getMessage());
+            error_log("Erreur PDO : " . $e->getMessage());
+            throw new Exception("Erreur lors de la récupération des statistiques");
         }
     }
 
     private function getTotalReservations() {
-        $stmt = $this->conn->query("SELECT COUNT(*) FROM reservations");
-        return $stmt->fetchColumn();
+        try {
+            $stmt = $this->conn->query("SELECT COUNT(*) FROM reservations");
+            $result = $stmt->fetchColumn();
+            error_log("Total réservations: " . $result);
+            return intval($result);
+        } catch (PDOException $e) {
+            error_log("Erreur getTotalReservations: " . $e->getMessage());
+            throw $e;
+        }
     }
 
     private function getAvailableSpots() {
-        $stmt = $this->conn->query("SELECT COUNT(*) FROM parking WHERE status = 'disponible'");
-        return $stmt->fetchColumn();
+        try {
+            $stmt = $this->conn->query("SELECT COUNT(*) FROM parking WHERE status = 'disponible'");
+            $result = $stmt->fetchColumn();
+            error_log("Places disponibles: " . $result);
+            return intval($result);
+        } catch (PDOException $e) {
+            error_log("Erreur getAvailableSpots: " . $e->getMessage());
+            throw $e;
+        }
     }
 
     private function getActiveUsers() {
-        $stmt = $this->conn->query("SELECT COUNT(*) FROM users WHERE status = 'actif'");
-        return $stmt->fetchColumn();
-    }
-
-    private function getPendingReservations() {
-        $stmt = $this->conn->query("SELECT COUNT(*) FROM reservations WHERE status = 'attente'");
-        return $stmt->fetchColumn();
+        try {
+            $stmt = $this->conn->query("SELECT COUNT(*) FROM users WHERE status = 'actif'");
+            $result = $stmt->fetchColumn();
+            error_log("Utilisateurs actifs: " . $result);
+            return intval($result);
+        } catch (PDOException $e) {
+            error_log("Erreur getActiveUsers: " . $e->getMessage());
+            throw $e;
+        }
     }
 
     public function getChartData() {
         try {
-            return [
-                'types' => $this->getParkingTypeStats()
-            ];
+            $data = $this->getParkingTypeStats();
+            return ['types' => $data];
         } catch (PDOException $e) {
-            throw new Exception($e->getMessage());
+            throw new Exception("Erreur lors de la récupération des données du graphique: " . $e->getMessage());
         }
     }
 
     private function getParkingTypeStats() {
-        $query = "SELECT p.type_place, COUNT(*) as count 
-                 FROM parking p 
-                 GROUP BY p.type_place";
+        $query = "SELECT 
+            type_place,
+            COUNT(*) as count
+            FROM parking 
+            GROUP BY type_place 
+            ORDER BY type_place";
         $stmt = $this->conn->query($query);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }

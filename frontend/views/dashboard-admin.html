@@ -11,7 +11,7 @@
                     <div class="d-flex justify-content-between align-items-start">
                         <div>
                             <h6 class="card-title text-white-50">Réservations totales</h6>
-                            <h2 class="card-text mb-0" id="totalReservations">0</h2>
+                            <h2 class="card-text mb-0" id="totalReservations">--</h2>
                         </div>
                         <i class="bi bi-calendar3 fs-1 text-white-50"></i>
                     </div>
@@ -24,8 +24,8 @@
                 <div class="card-body bg-success bg-gradient text-white rounded">
                     <div class="d-flex justify-content-between align-items-start">
                         <div>
-                            <h6 class="card-title text-white-50">Places disponibles</h6>
-                            <h2 class="card-text mb-0" id="availableSpots">0</h2>
+                            <h6 class="card-title text-white-50">Nombre de places</h6>
+                            <h2 class="card-text mb-0" id="availableSpots">60</h2>
                         </div>
                         <i class="bi bi-p-square fs-1 text-white-50"></i>
                     </div>
@@ -39,23 +39,9 @@
                     <div class="d-flex justify-content-between align-items-start">
                         <div>
                             <h6 class="card-title text-white-50">Utilisateurs actifs</h6>
-                            <h2 class="card-text mb-0" id="activeUsers">0</h2>
+                            <h2 class="card-text mb-0" id="activeUsers">--</h2>
                         </div>
                         <i class="bi bi-people fs-1 text-white-50"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-xl-3 col-lg-3 col-md-6">
-            <div class="card h-100 border-0 shadow-sm">
-                <div class="card-body bg-warning bg-gradient text-white rounded">
-                    <div class="d-flex justify-content-between align-items-start">
-                        <div>
-                            <h6 class="card-title text-white-50">Réservations en attente</h6>
-                            <h2 class="card-text mb-0" id="pendingReservations">0</h2>
-                        </div>
-                        <i class="bi bi-hourglass-split fs-1 text-white-50"></i>
                     </div>
                 </div>
             </div>
@@ -68,7 +54,7 @@
                 <div class="card-body py-4">
                     <h5 class="card-title mb-4 text-center">
                         <i class="bi bi-pie-chart me-2"></i>
-                        Types de places
+                        Répartition des types de places
                     </h5>
                     <div class="d-flex justify-content-center align-items-center" style="height: 400px;">
                         <canvas id="parkingTypesChart"></canvas>
