@@ -1,46 +1,54 @@
-📦 Application de Gestion de Parking
-🚗 Description
-Une application web permettant la gestion intelligente d'un parking avec un système de réservation en ligne, des tableaux de bord interactifs pour les utilisateurs et les administrateurs, ainsi qu'une interface responsive adaptée à tous les appareils.
+# Application de Gestion de Parking
 
-✨ Fonctionnalités
-👤 Côté Utilisateur
-🔐 Authentification sécurisée
+## Description
+Une application web permettant la gestion d'un parking avec système de réservation, tableaux de bord utilisateur et administrateur.
 
-📊 Tableau de bord personnel
+## Fonctionnalités
 
-📍 Visualisation en temps réel des places disponibles
+### Pour les Utilisateurs
+- Système d'authentification
+- Tableau de bord personnel
+- Visualisation des places disponibles
+- Gestion des réservations
+- Interface responsive
 
-📅 Gestion de ses propres réservations
+### Pour les Administrateurs
+- Tableau de bord avec statistiques
+- Visualisation graphique des types de places (graphique en anneau)
+- Suivi en temps réel :
+    - Nombre total d'utilisateurs actifs
+    - Nombre total de réservations
+    - Répartition des types de places
 
-📱 Interface responsive (mobile, tablette, desktop)
+## Technologies Utilisées
 
-🛠️ Côté Administrateur
-🧭 Tableau de bord avec statistiques globales
+### Backend
+- PHP
 
-📈 Graphique en anneau de la répartition des types de places (Chart.js)
+### Frontend
+- JavaScript (Vanilla)
+- Chart.js pour les visualisations
+- CSS pour le style
 
-📌 Suivi en temps réel :
+## Installation
 
-Nombre total d’utilisateurs actifs
+1. Cloner le projet :
+```bash
+git clone https://github.com/Math-Pav/app-gestion-parking.git
+```
 
-Nombre de réservations effectuées
+2. Configuration du serveur web
+Utilisez Apache ou Nginx.
 
-Répartition par types de places (PMR, voiture électrique, etc.)
+Pointez le DocumentRoot vers le répertoire suivant :
+```bash
+/var/www/html/app-gestion-parking
+```
+Base de données :
+Configurer les accès dans les fichiers de configuration : .env
 
-🧰 Technologies Utilisées
-🔙 Backend
-PHP (API REST ou scripts PHP classiques)
-
-🔝 Frontend
-JavaScript Vanilla
-
-Chart.js pour les visualisations graphiques
-
-HTML5 & CSS3 pour la structure et le style
-
-📂 Structure du Projet
-arduino
-Copier le code
+### Structure du projet
+```bash
 app-gestion-parking/
 ├── frontend/
 │   ├── controllers/
@@ -50,34 +58,8 @@ app-gestion-parking/
 │       └── js/
 │           └── navbar.js
 ├── api/
-│   └── ... (fichiers PHP pour les endpoints)
-├── config/
-│   └── ... (fichiers de configuration et connexions DB)
-└── index.php (ou fichier d'entrée principal)
-⚙️ Installation & Configuration
-1. Cloner le projet
-bash
-Copier le code
-git clone https://github.com/Math-Pav/app-gestion-parking.git
-2. Configuration du serveur web
-Utiliser Apache ou Nginx
+└── ...
+```
 
-Pointer le DocumentRoot vers le dossier /app-gestion-parking
-
-3. Base de données
-Créer la base de données correspondante (voir fichier .sql si disponible)
-
-Configurer les identifiants de connexion dans le fichier adéquat (ex. config/db.php)
-
-✅ À faire / Suggestions d'amélioration
-Ajout de tests automatisés
-
-Interface d'inscription utilisateur
-
-Gestion avancée des rôles
-
-Export des statistiques (CSV, PDF)
-
-👨‍💻 Auteur
+### Auteur
 Développé par Math-Pav
-📎 GitHub : @Math-Pav
