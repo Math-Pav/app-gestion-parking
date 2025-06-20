@@ -1,70 +1,41 @@
 class PaiementController {
     constructor() {
-        console.log('Initialisation du contrôleur de paiement');
         this.urlParams = new URLSearchParams(window.location.search);
         this.reservationId = this.urlParams.get('id');
-        console.log('ID de réservation:', this.reservationId);
 
-        if (!this.reservationId) {
-            console.error('ID de réservation manquant');
+        if (this.reservationId) {
+            this.loadReservationById();
+        } else {
             window.location.href = '/app-gestion-parking/mes-reservations';
-            return;
         }
 
-        this.loadReservationById();
+        this.initializeEventListeners();
     }
 
     loadReservationById() {
-        console.log('Chargement de la réservation...');
         fetch(`/app-gestion-parking/api/reservations/get-reservation?id=${this.reservationId}`)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`Erreur HTTP: ${response.status}`);
-                }
-                return response.text().then(text => {
-                    try {
-                        return JSON.parse(text);
-                    } catch (e) {
-                        console.error('Texte reçu:', text);
-                        throw new Error('Réponse invalide du serveur');
-                    }
-                });
-            })
+            .then(response => response.json())
             .then(data => {
-                console.log('Données reçues:', data);
                 if (data.success && data.reservation) {
                     this.displayReservationDetails(data.reservation);
-                    this.initializeEventListeners();
                 } else {
-                    throw new Error(data.message || 'Erreur de chargement');
+                    console.error('Erreur:', data.message);
+                    window.location.href = '/app-gestion-parking/mes-reservations';
                 }
             })
             .catch(error => {
                 console.error('Erreur:', error);
-                alert(error.message);
                 window.location.href = '/app-gestion-parking/mes-reservations';
             });
     }
 
     displayReservationDetails(reservation) {
-        console.log('Affichage des détails...');
-        const elements = {
-            'placeNumber': `Place ${reservation.place_number}`,
-            'placeType': this.formatVehicleType(reservation.type),
-            'startDate': new Date(reservation.start_date).toLocaleString('fr-FR'),
-            'endDate': new Date(reservation.end_date).toLocaleString('fr-FR'),
-            'duration': `${reservation.duration}h`,
-            'totalPrice': `${reservation.price}€`
-        };
-
-        Object.entries(elements).forEach(([id, value]) => {
-            const element = document.getElementById(id);
-            if (element) {
-                element.textContent = value;
-            } else {
-                console.error(`Élément non trouvé: ${id}`);
-            }
-        });
+        document.getElementById('placeNumber').textContent = `Place ${reservation.place_number}`;
+        document.getElementById('placeType').textContent = this.formatVehicleType(reservation.type);
+        document.getElementById('startDate').textContent = new Date(reservation.start_date).toLocaleString('fr-FR');
+        document.getElementById('endDate').textContent = new Date(reservation.end_date).toLocaleString('fr-FR');
+        document.getElementById('duration').textContent = `${reservation.duration}h`;
+        document.getElementById('totalPrice').textContent = `${reservation.price}€`;
     }
 
     formatVehicleType(type) {
@@ -76,30 +47,38 @@ class PaiementController {
         return types[type] || type;
     }
 
-    handleCancelReservation() {
-        console.log('Gestion de l\'annulation...');
+    initializeEventListeners() {
+        const cancelButton = document.getElementById('cancelReservation');
+        if (cancelButton) {
+            cancelButton.addEventListener('click', () => this.handleCancelReservation());
+        }
 
-        if (!this.reservationId) {
-            this.showError('ID de réservation non trouvé');
+        const proceedButton = document.getElementById('proceedToPayment');
+        if (proceedButton) {
+            proceedButton.addEventListener('click', () => this.handleProceedToPayment());
+        }
+    }
+
+    handleProceedToPayment() {
+        window.location.href = `/app-gestion-parking/next-paiement?id=${this.reservationId}`;
+    }
+
+    handleCancelReservation() {
+        if (!confirm('Êtes-vous sûr de vouloir annuler cette réservation ?')) {
             return;
         }
 
-        fetch('/app-gestion-parking/api/reservations/cancel', {
-            method: 'POST',
+        fetch('/app-gestion-parking/api/reservations/update-status', {
+            method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                reservation_id: this.reservationId
+                reservation_id: this.reservationId,
+                status: 'annuler'
             })
         })
-            .then(async response => {
-                const data = await response.json();
-                if (!response.ok) {
-                    throw new Error(data.message || 'Erreur serveur');
-                }
-                return data;
-            })
+            .then(response => response.json())
             .then(data => {
                 if (data.success) {
                     alert('Réservation annulée avec succès');
@@ -110,17 +89,15 @@ class PaiementController {
             })
             .catch(error => {
                 console.error('Erreur:', error);
-                this.showError(error.message || 'Erreur lors de l\'annulation');
+                this.showError('Erreur lors de l\'annulation');
             });
     }
 
     showError(message) {
-        console.error('Affichage erreur:', message);
         alert(message);
     }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('DOM chargé, initialisation du contrôleur...');
     new PaiementController();
 });
