@@ -1,0 +1,68 @@
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8">
+            <div class="card shadow mb-4">
+                <div class="card-body">
+                    <h4 class="card-title mb-4">Mes statistiques</h4>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="card bg-light">
+                                <div class="card-body text-center">
+                                    <h6 class="card-subtitle mb-2 text-muted">Réservations en cours</h6>
+                                    <p class="card-text display-6" id="activeReservations">--</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card bg-light">
+                                <div class="card-body text-center">
+                                    <h6 class="card-subtitle mb-2 text-muted">Total des réservations</h6>
+                                    <p class="card-text display-6" id="totalReservations">--</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card shadow">
+                <div class="card-body p-4">
+                    <h4 class="card-title mb-4">Mes informations personnelles</h4>
+                    <div id="message" class="alert" style="display: none;"></div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label text-muted">Nom complet</label>
+                            <div class="form-control bg-light" id="name" readonly>--</div>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label text-muted">Email</label>
+                            <div class="form-control bg-light" id="email" readonly>--</div>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label text-muted">Téléphone</label>
+                            <div class="form-control bg-light" id="phone" readonly>--</div>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label text-muted">Rôle</label>
+                            <div class="form-control bg-light" id="role" readonly>--</div>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label text-muted">Date d'inscription</label>
+                            <div class="form-control bg-light" id="registration_date" readonly>--</div>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label text-muted">Statut du compte</label>
+                            <div class="badge rounded-pill fs-6 p-2 w-100" id="status">--</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,123 @@
+<div class="container-fluid px-4">
+    <div class="admin-header mb-5">
+        <h2>
+            <i class="bi bi-speedometer2"></i>
+            Tableau de bord administrateur
+        </h2>
+    </div>
+
+    <div class="row g-4 mb-5 justify-content-center">
+        <div class="col-xl-3 col-lg-3 col-md-6">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body bg-primary bg-gradient text-white rounded">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h6 class="card-title text-white-50">Réservations totales</h6>
+                            <h2 class="card-text mb-0" id="totalReservations">--</h2>
+                        </div>
+                        <i class="bi bi-calendar3 fs-1 text-white-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-lg-3 col-md-6">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body bg-success bg-gradient text-white rounded">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h6 class="card-title text-white-50">Nombre de places</h6>
+                            <h2 class="card-text mb-0" id="availableSpots">60</h2>
+                        </div>
+                        <i class="bi bi-p-square fs-1 text-white-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-lg-3 col-md-6">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body bg-info bg-gradient text-white rounded">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h6 class="card-title text-white-50">Utilisateurs actifs</h6>
+                            <h2 class="card-text mb-0" id="activeUsers">--</h2>
+                        </div>
+                        <i class="bi bi-people fs-1 text-white-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-xl-8 col-lg-10 col-md-12">
+            <div class="card chart-card border-0">
+                <div class="card-body py-4">
+                    <h5 class="card-title mb-4 text-center">
+                        <i class="bi bi-pie-chart me-2"></i>
+                        Répartition des types de places
+                    </h5>
+                    <div class="chart-container d-flex justify-content-center align-items-center">
+                        <canvas id="parkingTypesChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .admin-header {
+        margin-top: 1.5rem;
+        position: relative;
+        text-align: center;
+    }
+
+    .admin-header h2 {
+        font-size: 1.8rem;
+        font-weight: 600;
+        color: #1a1f36;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.8rem;
+    }
+
+    .admin-header i {
+        color: #0d6efd;
+        font-size: 1.6rem;
+    }
+
+    .admin-header::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100px;
+        height: 2px;
+        background: #e6e9f0;
+    }
+    .chart-card {
+        box-shadow: 0 0 40px rgba(0, 0, 0, 0.1);
+        transition: box-shadow 0.3s ease;
+    }
+
+    .chart-card:hover {
+        box-shadow: 0 0 50px rgba(0, 0, 0, 0.15);
+    }
+
+    .chart-container {
+        height: 400px;
+        position: relative;
+        padding: 15px;
+        background: linear-gradient(
+                to bottom,
+                rgba(255, 255, 255, 0) 0%,
+                rgba(245, 245, 245, 0.1) 100%
+        );
+        border-radius: 10px;
+    }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.umd.min.js"></script>

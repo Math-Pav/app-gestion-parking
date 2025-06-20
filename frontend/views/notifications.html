@@ -1,0 +1,141 @@
+<div class="container">
+    <div class="row justify-content-center my-5">
+        <div class="col-12">
+            <div class="header-section mb-4">
+                <h2 class="text-center position-relative">
+                    <span class="notification-badge" id="notificationCount"></span>
+                    Mes notifications
+                </h2>
+                <p class="text-center text-muted">Restez informé de vos activités de stationnement</p>
+            </div>
+
+            <div class="card border-0 shadow-lg">
+                <div class="card-body p-4">
+                    <div class="text-center mb-4">
+                        <button class="btn btn-light rounded-pill px-4" id="markAllRead">
+                            <i class="bi bi-check2-all"></i> Tout supprimer
+                        </button>
+                    </div>
+
+                    <div id="notificationsList" class="notifications-list">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .container {
+        max-width: 1200px;
+        margin: auto;
+    }
+
+    .header-section h2 {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #0d6efd;
+        position: relative;
+        margin-bottom: 1rem;
+    }
+
+    .header-section p {
+        font-size: 1rem;
+        color: #6c757d;
+    }
+
+    .notification-badge {
+        display: inline-block;
+        background: #dc3545;
+        color: #fff;
+        font-size: 0.75rem;
+        font-weight: bold;
+        padding: 0.3rem 0.6rem;
+        border-radius: 50%;
+        position: absolute;
+        top: -5px;
+        right: -10px;
+    }
+
+    #markAllRead {
+        background-color: #f8f9fa;
+        color: #0d6efd;
+        border: 1px solid #0d6efd;
+        font-size: 0.9rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    #markAllRead:hover {
+        background-color: #0d6efd;
+        color: #fff;
+    }
+
+    .notifications-list {
+        max-height: 500px;
+        overflow-y: auto;
+        border: 1px solid #dee2e6;
+        border-radius: 0.5rem;
+        background-color: #fff;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .notification-item {
+        padding: 1rem;
+        border-bottom: 1px solid #f1f1f1;
+        display: flex;
+        align-items: center;
+        transition: background-color 0.3s ease;
+    }
+
+    .notification-item:last-child {
+        border-bottom: none;
+    }
+
+    .notification-item:hover {
+        background-color: rgba(13, 110, 253, 0.05);
+    }
+
+    .notification-dot {
+        width: 10px;
+        height: 10px;
+        background-color: #0d6efd;
+        border-radius: 50%;
+        margin-right: 1rem;
+    }
+
+    .notification-item.read .notification-dot {
+        background-color: transparent;
+    }
+
+    .notification-item .notification-content {
+        flex: 1;
+        font-size: 0.95rem;
+        color: #495057;
+    }
+
+    .notification-item .notification-time {
+        font-size: 0.8rem;
+        color: #adb5bd;
+        white-space: nowrap;
+    }
+
+    @media (max-width: 768px) {
+        .header-section h2 {
+            font-size: 1.5rem;
+        }
+
+        .notifications-list {
+            max-height: 400px;
+        }
+
+        .notification-item {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .notification-item .notification-time {
+            margin-top: 0.5rem;
+        }
+    }
+</style>
