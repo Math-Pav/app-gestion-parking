@@ -130,4 +130,6 @@ class NotificationsController {
     }
 }
 
-const notificationsController = new NotificationsController();
+document.addEventListener('DOMContentLoaded', () => {
+    new NotificationsController();
+});

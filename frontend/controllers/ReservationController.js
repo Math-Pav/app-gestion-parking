@@ -90,7 +90,6 @@ class ReservationController {
                     this.displayMessage(data.message || 'Erreur lors de l\'annulation', 'error');
                 }
             } catch (error) {
-                this.displayMessage('Erreur de connexion au serveur', 'error');
             }
         }
     }
@@ -171,7 +170,6 @@ class ReservationController {
                 this.displayMessage(data.message || 'Une erreur est survenue', 'error');
             }
         } catch (error) {
-            this.displayMessage('Erreur de connexion au serveur', 'error');
         }
     }
 

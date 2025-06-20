@@ -19,7 +19,6 @@ class LoginModel {
 
     public function login($email, $password) {
         try {
-            // Ajout du rôle dans la requête
             $query = "SELECT id, email, password, role FROM user WHERE email = :email AND status = 'active' LIMIT 1";
             $stmt = $this->conn->prepare($query);
             $stmt->execute(['email' => $email]);
