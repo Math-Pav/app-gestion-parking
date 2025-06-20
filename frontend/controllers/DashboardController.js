@@ -13,6 +13,28 @@ class DashboardController {
         };
 
         this.bindEvents();
+        this.loadDashboardStats();
+    }
+
+    async loadDashboardStats() {
+        try {
+            const response = await fetch(`${this.api.baseUrl}/dashboard/stats`);
+
+            if (!response.ok) {
+                throw new Error('Erreur réseau');
+            }
+
+            const data = await response.json();
+
+            if (data.success) {
+                this.elements.availableSpots.textContent = data.data.availableSpots.total;
+                this.elements.myReservations.textContent = data.data.reservations.total;
+            } else {
+                this.displayMessage('Erreur lors du chargement des données', 'danger');
+            }
+        } catch (error) {
+            this.displayMessage('Erreur de connexion au serveur', 'danger');
+        }
     }
 
     bindEvents() {

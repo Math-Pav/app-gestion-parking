@@ -12,6 +12,7 @@ require_once __DIR__ . '/backend/controllers/ListController.php';
 require_once __DIR__ . '/backend/controllers/ListReservationController.php';
 require_once __DIR__ . '/backend/controllers/DashboardAdminController.php';
 require_once __DIR__ . '/backend/controllers/NextPaiementController.php';
+require_once __DIR__ . '/backend/controllers/DashboardController.php';
 
 define('BASE_PATH', '/app-gestion-parking');
 
@@ -180,6 +181,9 @@ if (strpos($path, '/api/') === 0) {
     } elseif ($path === '/api/admin/chart-data') {
         $controller = new DashboardAdminController();
         $controller->getChartData();
+    } elseif ($path === '/api/dashboard/stats') {
+        $controller = new DashboardController();
+        $controller->getDashboardStats();
     } elseif ($path === '/api/payment/process') {
         $controller = new NextPaiementController();
         $controller->handlePayment();
