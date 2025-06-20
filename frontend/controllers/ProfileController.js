@@ -61,8 +61,8 @@ class ProfileController {
             this.elements.status.className = 'badge rounded-pill fs-6 p-2 w-100 bg-success';
         }
 
-        this.elements.activeReservations.textContent = '0';
-        this.elements.totalReservations.textContent = '0';
+        this.elements.activeReservations.textContent = user.reservations_actives || '0';
+        this.elements.totalReservations.textContent = user.total_reservations || '0';
     }
 
     showError(message) {

@@ -21,14 +21,17 @@ class UserController {
         }
 
         $userId = $_SESSION['user']['id'];
-        $result = $this->userModel->getUserProfile($userId);
+        $profileResult = $this->userModel->getUserProfile($userId);
+        $statsResult = $this->userModel->getUserStats($userId);
 
-        if ($result['success']) {
-            $_SESSION['user']['name'] = $result['user']['name'] ?? '';
+        if ($profileResult['success']) {
+            $_SESSION['user']['name'] = $profileResult['user']['name'] ?? '';
+            $profileResult['user']['reservations_actives'] = $statsResult['reservations_actives'];
+            $profileResult['user']['total_reservations'] = $statsResult['total_reservations'];
         }
 
-        http_response_code($result['success'] ? 200 : 404);
-        echo json_encode($result);
+        http_response_code($profileResult['success'] ? 200 : 404);
+        echo json_encode($profileResult);
     }
 
 }

@@ -14,6 +14,28 @@ class UserModel {
         }
     }
 
+    public function getUserStats($userId) {
+        try {
+            $query = "SELECT 
+            COUNT(*) as total_reservations,
+            SUM(CASE WHEN status IN ('en_cours', 'reserver') THEN 1 ELSE 0 END) as reservations_actives
+            FROM reservations 
+            WHERE user_id = :user_id";
+
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
+            $stmt->execute();
+
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log($e->getMessage());
+            return [
+                'total_reservations' => 0,
+                'reservations_actives' => 0
+            ];
+        }
+    }
+
     public function getUserProfile($userId) {
         try {
             $query = "SELECT name, email, phone, role, registration_date, status FROM user WHERE id = :id";
